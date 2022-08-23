@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProjectGuid>{85CE7B14-71B2-3C6A-DA12-37BDC61527EC}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ORiginBuilderTools</RootNamespace>
+    <AssemblyName>ORiginBuilderTools</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\ORiginBuilderTools\</OutputPath>
+    <BaseIntermediateOutputPath>..\..\bin-int\Debug\ORiginBuilderTools\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Release\ORiginBuilderTools\</OutputPath>
+    <BaseIntermediateOutputPath>..\..\bin-int\Release\ORiginBuilderTools\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Dist|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Dist\ORiginBuilderTools\</OutputPath>
+    <BaseIntermediateOutputPath>..\..\bin-int\Dist\ORiginBuilderTools\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Dist|x64' ">
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\scripts\Dependencies\Dependencies.lua">
+      <Link>scripts\Dependencies\Dependencies.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Dependencies\glad.lua">
+      <Link>scripts\Dependencies\glad.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Dependencies\glfw.lua">
+      <Link>scripts\Dependencies\glfw.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Dependencies\imgui.lua">
+      <Link>scripts\Dependencies\imgui.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Premake5.lua">
+      <Link>scripts\Premake5.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Projects\Editor.lua">
+      <Link>scripts\Projects\Editor.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Projects\ORigin.lua">
+      <Link>scripts\Projects\ORigin.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Projects\ORiginBuilderTools.lua">
+      <Link>scripts\Projects\ORiginBuilderTools.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Projects\ProjectSwitcher.lua">
+      <Link>scripts\Projects\ProjectSwitcher.lua</Link>
+    </None>
+    <None Include="..\..\scripts\Projects\Sandbox.lua">
+      <Link>scripts\Projects\Sandbox.lua</Link>
+    </None>
+    <None Include="..\..\scripts\build.bat">
+      <Link>scripts\build.bat</Link>
+    </None>
+    <Compile Include="src\Build.cs" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

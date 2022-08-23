@@ -1,0 +1,19 @@
+#pragma once
+#include <iostream>
+#include <stdio.h>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <Windows.h>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <array>
+#include <functional>
+#include <memory>
+#include <utility>
+#include <algorithm>
+#include <cstdio>
+#include <chrono>
+
+#include "Origin/Core/OriginCore.h"

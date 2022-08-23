@@ -1,0 +1,12 @@
+*.ipch
+*.vcxproj
+*.filters
+*.user
+*.vcxproj.filters
+*.vcxproj.user
+*.vs
+*.sln
+*.cdr
+ORigin.sln.startup.json
+bin/
+bin-int/

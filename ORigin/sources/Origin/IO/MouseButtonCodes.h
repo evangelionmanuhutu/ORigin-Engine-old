@@ -1,0 +1,14 @@
+#pragma once
+
+#define OGN_MOUSE_BUTTON_1         0
+#define OGN_MOUSE_BUTTON_2         1
+#define OGN_MOUSE_BUTTON_3         2
+#define OGN_MOUSE_BUTTON_4         3
+#define OGN_MOUSE_BUTTON_5         4
+#define OGN_MOUSE_BUTTON_6         5
+#define OGN_MOUSE_BUTTON_7         6
+#define OGN_MOUSE_BUTTON_8         7
+#define OGN_MOUSE_BUTTON_LAST      OGN_MOUSE_BUTTON_8
+#define OGN_MOUSE_BUTTON_LEFT      OGN_MOUSE_BUTTON_1
+#define OGN_MOUSE_BUTTON_RIGHT     OGN_MOUSE_BUTTON_2
+#define OGN_MOUSE_BUTTON_MIDDLE    OGN_MOUSE_BUTTON_3
