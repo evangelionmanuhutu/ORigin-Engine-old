@@ -25,7 +25,7 @@ project "Sandbox"
 	}
     
     includedirs {
-        "%{wks.location}/ORigin/sources",
+        "%{wks.location}/Origin/sources",
         "%{IncludeDir.SPDLOG}",
         "%{IncludeDir.STBI}",
         "%{IncludeDir.GLFW}",

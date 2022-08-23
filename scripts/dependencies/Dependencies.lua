@@ -1,15 +1,15 @@
 -- Set Dependencies Folder
 IncludeDir = {}
-IncludeDir["GLFW"] = "%{wks.location}/ORigin/vendor/glfw/include"
-IncludeDir["GLAD"] = "%{wks.location}/ORigin/vendor/glad/include"
-IncludeDir["IMGUI"] = "%{wks.location}/ORigin/vendor/imgui"
-IncludeDir["STBI"] = "%{wks.location}/ORigin/vendor/stbi"
-IncludeDir["SPDLOG"] = "%{wks.location}/ORigin/vendor/spdlog/include"
-IncludeDir["GLM"] = "%{wks.location}/ORigin/vendor/glm"
-IncludeDir["ENTT"] = "%{wks.location}/ORigin/vendor/entt/"
+IncludeDir["GLFW"] = "%{wks.location}/Origin/vendor/glfw/include"
+IncludeDir["GLAD"] = "%{wks.location}/Origin/vendor/glad/include"
+IncludeDir["IMGUI"] = "%{wks.location}/Origin/vendor/imgui"
+IncludeDir["STBI"] = "%{wks.location}/Origin/vendor/stbi"
+IncludeDir["SPDLOG"] = "%{wks.location}/Origin/vendor/spdlog/include"
+IncludeDir["GLM"] = "%{wks.location}/Origin/vendor/glm"
+IncludeDir["ENTT"] = "%{wks.location}/Origin/vendor/entt/"
 
 -- Dependencies Lua File
-group "Vendor"
+group "vendor"
 include "glfw.lua"
 include "glad.lua"
 include "imgui.lua"

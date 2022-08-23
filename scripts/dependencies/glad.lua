@@ -7,7 +7,7 @@ project "glad"
     objdir (intermediateOutputdir)
 
     files {
-        "%{wks.location}/ORigin/vendor/glad/src/glad.c"
+        "%{wks.location}/Origin/vendor/glad/src/glad.c"
     }
 
     includedirs {

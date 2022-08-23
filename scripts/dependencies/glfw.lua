@@ -10,22 +10,22 @@ project "glfw"
 
 	files
 	{
-		"%{wks.location}/ORigin/vendor/glfw/include/GLFW/glfw3.h",
-		"%{wks.location}/ORigin/vendor/glfw/include/GLFW/glfw3native.h",
-		"%{wks.location}/ORigin/vendor/glfw/src/glfw_config.h",
-		"%{wks.location}/ORigin/vendor/glfw/src/context.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/init.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/input.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/monitor.c",
+		"%{wks.location}/Origin/vendor/glfw/include/GLFW/glfw3.h",
+		"%{wks.location}/Origin/vendor/glfw/include/GLFW/glfw3native.h",
+		"%{wks.location}/Origin/vendor/glfw/src/glfw_config.h",
+		"%{wks.location}/Origin/vendor/glfw/src/context.c",
+		"%{wks.location}/Origin/vendor/glfw/src/init.c",
+		"%{wks.location}/Origin/vendor/glfw/src/input.c",
+		"%{wks.location}/Origin/vendor/glfw/src/monitor.c",
 
-		"%{wks.location}/ORigin/vendor/glfw/src/null_init.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/null_joystick.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/null_monitor.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/null_window.c",
+		"%{wks.location}/Origin/vendor/glfw/src/null_init.c",
+		"%{wks.location}/Origin/vendor/glfw/src/null_joystick.c",
+		"%{wks.location}/Origin/vendor/glfw/src/null_monitor.c",
+		"%{wks.location}/Origin/vendor/glfw/src/null_window.c",
 
-		"%{wks.location}/ORigin/vendor/glfw/src/platform.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/vulkan.c",
-		"%{wks.location}/ORigin/vendor/glfw/src/window.c",
+		"%{wks.location}/Origin/vendor/glfw/src/platform.c",
+		"%{wks.location}/Origin/vendor/glfw/src/vulkan.c",
+		"%{wks.location}/Origin/vendor/glfw/src/window.c",
 	}
 
 	filter "system:windows"

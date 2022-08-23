@@ -11,11 +11,11 @@ project "ORigin"
 
     pchheader "pch.h"
     -- (pchsource) Under Windows, it must be a path relative to 'premake5.lua' (default premake file)
-    pchsource "../../ORigin/sources/pch.cpp" -- don't change this
+    pchsource "../../Origin/sources/pch.cpp" -- don't change this
 
     files {
-	  "%{wks.location}/ORigin/sources/**.h",
-	  "%{wks.location}/ORigin/sources/**.cpp",
+	  "%{wks.location}/Origin/sources/**.h",
+	  "%{wks.location}/Origin/sources/**.cpp",
 	  "%{wks.location}/readme.md",
       "%{IncludeDir.STBI}/**.cpp",
       "%{IncludeDir.STBI}/**.h",
@@ -23,7 +23,7 @@ project "ORigin"
 	}
 
     includedirs {
-        "%{wks.location}/ORigin/sources",
+        "%{wks.location}/Origin/sources",
         "%{IncludeDir.SPDLOG}",
         "%{IncludeDir.STBI}",
         "%{IncludeDir.GLFW}",
