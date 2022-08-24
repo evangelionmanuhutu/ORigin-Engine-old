@@ -10,29 +10,30 @@ namespace Origin
   static bool guiRenderStatus = true;
   static bool guiDebugInfo = true;
   static bool guiImGuiDemoWindow = true;
-  glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
+  glm::vec2 viewportSize = { 0.0f, 0.0f };
+  glm::vec2 m_ViewportBounds[2];
 
-  void EditorPanel::BeginViewport(const std::shared_ptr<Framebuffer>& framebuffer, OrthoCameraController& cameraController)
+
+  EditorViewport::~EditorViewport()
+  {
+  }
+
+  void EditorViewport::Refresh(const std::shared_ptr<Framebuffer>& framebuffer, OrthoCameraController& cameraController)
   {
     if (FramebufferSpecification spec = framebuffer->GetSpecification();
-      m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
-      (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+      viewportSize.x > 0.0f && viewportSize.y > 0.0f &&
+      (spec.Width != viewportSize.x || spec.Height != viewportSize.y))
     {
-      framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-      cameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+      framebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+      cameraController.OnResize(viewportSize.x, viewportSize.y);
     }
-
     framebuffer->Bind();
   }
 
-  void EditorPanel::EndViewport(const std::shared_ptr<Framebuffer>& framebuffer)
-  {
-    framebuffer->Unbind();
-  }
 
-  void EditorPanel::Viewport(const std::shared_ptr<Framebuffer>& framebuffer, OrthoCameraController& cameraController)
+  void EditorViewport::GuiViewport(const std::shared_ptr<Framebuffer>& framebuffer)
   {
-    if(guiImGuiDemoWindow)
+    if (guiImGuiDemoWindow)
       ImGui::ShowDemoWindow(&guiImGuiDemoWindow);
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar
@@ -43,6 +44,8 @@ namespace Origin
     {
       ImGui::Begin("Viewport", &guiViewportOpen, window_flags);
 
+      auto viewportOffset = ImGui::GetCursorPos();
+
       if (ImGui::IsWindowHovered())
       {
         ImGuiIO& io = ImGui::GetIO();
@@ -50,14 +53,42 @@ namespace Origin
       }
 
       ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-      m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+      viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
       uint32_t viewportID = framebuffer->GetColorAttachmentRendererID();
-      ImGui::Image((void*)viewportID, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
+      ImGui::Image((void*)viewportID, ImVec2(viewportSize.x, viewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
+
+      auto windowSize = ImGui::GetWindowSize();
+      m_ViewportSize = viewportSize;
+
+      ImVec2 minBound = ImGui::GetWindowPos();
+      minBound.x += viewportOffset.x;
+      minBound.y += viewportOffset.y;
+
+      ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
+      m_ViewportBounds[0] = { minBound.x, minBound.y };
+      m_ViewportBounds[1] = { maxBound.x, maxBound.y };
+
+      auto [mx, my] = ImGui::GetMousePos();
+      mx -= m_ViewportBounds[0].x;
+      my -= m_ViewportBounds[0].y;
+      glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+      my = viewportSize.y - my;
+
+      mouseX = (int)mx;
+      mouseY = (int)my;
+
+      if (mouseX < 0) mouseX = 0;
+      else if (mouseX > (int)viewportSize.x) mouseX = (int)viewportSize.x;
+      if (mouseY < 0) mouseY = 0;
+      else if (mouseY > (int)viewportSize.y) mouseY = (int)viewportSize.y;
 
       ImGui::End();
     }
   }
+
+
+  // Editor Panel
 
   void EditorPanel::MenuBar()
   {
@@ -138,10 +169,6 @@ namespace Origin
       ImGui::Text("ImGui version : (%s)", IMGUI_VERSION);
       ImGui::Checkbox("vSync", &Application::Get().SetVSync);
       ImGui::Separator();
-      if (ImGui::IsMousePosValid())
-        ImGui::Text("Mouse Position: (%.1f,%.1f)", io.MousePos.x, io.MousePos.y);
-      else
-        ImGui::Text("Mouse Position: <invalid>");
       ImGui::End();
     }
 

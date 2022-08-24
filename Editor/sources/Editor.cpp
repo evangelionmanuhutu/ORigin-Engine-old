@@ -3,12 +3,12 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "panels/EditorTheme.h"
-#include "panels/EditorPanel.h"
 
 namespace Origin {
 
 	void Editor::OnAttach()
   {
+    m_CameraController.EditorMode(false);
     EditorTheme::Apply();
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
@@ -18,16 +18,27 @@ namespace Origin {
 
   void Editor::OnUpdate(Timestep ts)
   {
-    EditorPanel::BeginViewport(m_Framebuffer, m_CameraController);
+
+    float mouseX = (float)vp.GetMouseX();
+    float mouseY = (float)vp.GetMouseY();
+
+    mouseX = (mouseX / vp.GetWidth()) * 2 - 1;
+    mouseY = (mouseY / vp.GetHeight()) * 2 - 1;
+    mouseX = mouseX * m_CameraController.GetZoomLevel();
+    mouseY = mouseY * m_CameraController.GetZoomLevel();
+
+    vp.Refresh(m_Framebuffer, m_CameraController);
     RenderCommand::ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     RenderCommand::Clear();
 
     m_CameraController.OnUpdate(ts);
     Renderer2D::ResetStats();
     Renderer2D::BeginScene(m_CameraController.GetCamera());
-    Renderer2D::DrawQuad(glm::vec3(0.0f), glm::vec2(0.5f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    Renderer2D::DrawQuad(glm::vec3(mouseX, mouseY, 0.0f), glm::vec2(0.3f), glm::vec4(color));
+    Renderer2D::DrawQuad(glm::vec3(1.0f, 0.0f, -0.1f), glm::vec2(0.5f), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
     Renderer2D::EndScene();
-    EditorPanel::EndViewport(m_Framebuffer);
+
+    OGN_CORE_INFO("x {0} y {1}", mouseX, mouseY);
   }
 
   bool Editor::OnWindowResize(WindowResizeEvent& e)
@@ -37,18 +48,18 @@ namespace Origin {
 
   bool Editor::OnMouseMovedEvent(MouseMovedEvent& e)
   {
-
     return false;
   }
 
   void Editor::OnGuiRender()
   {
     EditorPanel::BeginDockspace();
-
-    EditorPanel::Viewport(m_Framebuffer, m_CameraController);
     EditorPanel::MenuBar();
+    vp.GuiViewport(m_Framebuffer);
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGui::Begin("Quad");
+    ImGui::ColorEdit4("color", glm::value_ptr(color));
+    ImGui::End();
 
     ImGui::Begin("Conten Drawer");
     ImGui::End();

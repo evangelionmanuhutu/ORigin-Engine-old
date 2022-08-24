@@ -1,12 +1,15 @@
 ﻿#pragma once
 #include <Origin.h>
+#include "panels/EditorPanel.h"
 
 namespace Origin {
 
   class Editor : public Layer
   {
   public:
-    Editor() : Layer("Editor") {}
+    Editor() : Layer("Editor")
+    {
+    }
 
     void OnAttach() override;
     void OnUpdate(Timestep ts) override;
@@ -25,6 +28,9 @@ namespace Origin {
     void OnGuiRender() override;
 
   private:
+    glm::vec4 color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
+
+  private:
     ShaderLibrary m_ShaderLibrary;
     OrthoCameraController m_CameraController;
     std::shared_ptr<Framebuffer> m_Framebuffer;
@@ -32,6 +38,7 @@ namespace Origin {
     std::shared_ptr<SubTexture2D> m_StairsTexture;
     std::shared_ptr<SubTexture2D> m_BarrelTexture;
     std::shared_ptr<SubTexture2D> m_TreeTexture;
-  private:
+
+    EditorViewport vp;
   };
 }

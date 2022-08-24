@@ -18,26 +18,51 @@ namespace Origin
 	{
 		float moveSpeed = 1.0f;
 
-		if (Input::IsKeyPressed(OGN_KEY_A) &&  Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
-			m_CameraPosition.x -= m_CameraTranslationSpeed * time;
-		else if (Input::IsKeyPressed(OGN_KEY_D) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
-			m_CameraPosition.x += m_CameraTranslationSpeed * time;
-		if (Input::IsKeyPressed(OGN_KEY_S) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
-			m_CameraPosition.y -= m_CameraTranslationSpeed * time;
-		else if (Input::IsKeyPressed(OGN_KEY_W) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
-			m_CameraPosition.y += m_CameraTranslationSpeed * time;
+		if (m_EditorMode) {
+			if (Input::IsKeyPressed(OGN_KEY_A) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+				m_CameraPosition.x -= m_CameraTranslationSpeed * time;
+			else if (Input::IsKeyPressed(OGN_KEY_D) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+				m_CameraPosition.x += m_CameraTranslationSpeed * time;
+			if (Input::IsKeyPressed(OGN_KEY_S) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+				m_CameraPosition.y -= m_CameraTranslationSpeed * time;
+			else if (Input::IsKeyPressed(OGN_KEY_W) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+				m_CameraPosition.y += m_CameraTranslationSpeed * time;
 
-		if (!m_IsRotate) {
-			if(Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT))
-				moveSpeed = 3.0f;
+			if (!m_IsRotate) {
+				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT))
+					moveSpeed = 3.0f;
+			}
+
+			if (m_IsRotate) {
+				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_A))
+					m_CameraRotation -= m_CameraRotationSpeed * time;
+
+				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_D))
+					m_CameraRotation += m_CameraRotationSpeed * time;
+			}
 		}
+		else {
+			if (Input::IsKeyPressed(OGN_KEY_A))
+				m_CameraPosition.x -= m_CameraTranslationSpeed * time;
+			else if (Input::IsKeyPressed(OGN_KEY_D))
+				m_CameraPosition.x += m_CameraTranslationSpeed * time;
+			if (Input::IsKeyPressed(OGN_KEY_S))
+				m_CameraPosition.y -= m_CameraTranslationSpeed * time;
+			else if (Input::IsKeyPressed(OGN_KEY_W))
+				m_CameraPosition.y += m_CameraTranslationSpeed * time;
 
-		if (m_IsRotate) {
-			if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_A))
-				m_CameraRotation -= m_CameraRotationSpeed * time;
+			if (!m_IsRotate) {
+				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT))
+					moveSpeed = 3.0f;
+			}
 
-			if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_D))
-				m_CameraRotation += m_CameraRotationSpeed * time;
+			if (m_IsRotate) {
+				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_A))
+					m_CameraRotation -= m_CameraRotationSpeed * time;
+
+				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_D))
+					m_CameraRotation += m_CameraRotationSpeed * time;
+			}
 		}
 
 		// reset position

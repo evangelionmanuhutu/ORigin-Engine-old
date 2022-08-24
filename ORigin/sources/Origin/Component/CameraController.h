@@ -13,6 +13,8 @@ namespace Origin {
 	public:
 		OrthoCameraController(float aspectRatio = 1280.0f / 720.0f, bool rotate = false);
 
+		void EditorMode(bool active = false) { m_EditorMode = active; }
+
 		void OnUpdate(float time);
 		void OnEvent(Event& e);
 
@@ -39,6 +41,7 @@ namespace Origin {
 		float m_AspectRatio;
 		float m_ZoomLevel = 2.0f;
 		OrthoCamera m_Camera;
+		bool m_EditorMode = false;
 		bool m_IsRotate = false;
 		glm::vec3 m_CameraPosition = glm::vec3(0.0f);
 		float m_CameraRotation = 0.0f;

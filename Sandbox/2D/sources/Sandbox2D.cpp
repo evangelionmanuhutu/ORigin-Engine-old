@@ -1,5 +1,4 @@
 #include "Origin\EntryPoint.h"
-
 #include "Sandbox2D.h"
 #include <glm\gtc\type_ptr.hpp>
 
@@ -14,9 +13,6 @@ namespace Origin {
     m_StairsTexture = SubTexture2D::CreateFromCoords(m_Sprites, glm::vec2(7.0f, 6.0f), glm::vec2(128, 128));
     m_BarrelTexture = SubTexture2D::CreateFromCoords(m_Sprites, glm::vec2(8.0f, 2.0f), glm::vec2(128, 128));
     m_TreeTexture = SubTexture2D::CreateFromCoords(m_Sprites, glm::vec2(2.0f, 1.0f), glm::vec2(128, 128), glm::vec2(1, 2));
-
-    ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("assets/fonts/JetBrainsMono-SemiBold.ttf", 16);
   }
 
   void Sandbox2D::OnUpdate(Timestep ts)

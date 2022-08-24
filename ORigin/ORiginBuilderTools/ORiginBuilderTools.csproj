@@ -21,8 +21,7 @@
     <OutputPath>..\..\bin\Debug\ORiginBuilderTools\</OutputPath>
     <BaseIntermediateOutputPath>..\..\bin-int\Debug\ORiginBuilderTools\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -34,8 +33,7 @@
     <OutputPath>..\..\bin\Release\ORiginBuilderTools\</OutputPath>
     <BaseIntermediateOutputPath>..\..\bin-int\Release\ORiginBuilderTools\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -47,8 +45,7 @@
     <OutputPath>..\..\bin\Dist\ORiginBuilderTools\</OutputPath>
     <BaseIntermediateOutputPath>..\..\bin-int\Dist\ORiginBuilderTools\</BaseIntermediateOutputPath>
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
