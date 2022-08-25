@@ -18,7 +18,7 @@ namespace Origin
   {
   }
 
-  void EditorViewport::Refresh(const std::shared_ptr<Framebuffer>& framebuffer, OrthoCameraController& cameraController)
+  void EditorViewport::Refresh(const std::shared_ptr<Framebuffer>& framebuffer, OrthoCameraController& cameraController, const glm::vec4& clearColor)
   {
     if (FramebufferSpecification spec = framebuffer->GetSpecification();
       viewportSize.x > 0.0f && viewportSize.y > 0.0f &&
@@ -28,6 +28,9 @@ namespace Origin
       cameraController.OnResize(viewportSize.x, viewportSize.y);
     }
     framebuffer->Bind();
+
+    RenderCommand::ClearColor(clearColor);
+    RenderCommand::Clear();
   }
 
 

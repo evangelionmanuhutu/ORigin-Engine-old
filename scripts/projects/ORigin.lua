@@ -19,7 +19,6 @@ project "ORigin"
 	  "%{wks.location}/readme.md",
       "%{IncludeDir.STBI}/**.cpp",
       "%{IncludeDir.STBI}/**.h",
-      "%{IncludeDir.ENTT}/**.hpp",
 	}
 
     includedirs {

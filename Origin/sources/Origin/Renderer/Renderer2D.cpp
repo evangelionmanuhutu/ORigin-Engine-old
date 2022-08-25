@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Renderer2D.h"
-#include "Origin\Component\Camera.h"
+#include "Origin\Scene\Component\Camera.h"
 #include "RenderCommand.h"
 
 #include "Platform\OpenGL\OpenGL_Shader.h"
@@ -120,7 +120,7 @@ namespace Origin
 	}
 
 	// PRIMITIVES
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4 color)
 	{
 		constexpr int QuadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
@@ -130,9 +130,6 @@ namespace Origin
 
 		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
 			Renderer2D::StartBatch();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position))
-			* glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, 1.0f));
 
 		for (size_t i = 0; i < QuadVertexCount; i++)
 		{
@@ -147,12 +144,7 @@ namespace Origin
 		s_Data.Stats.Quad_Count++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& scale, const glm::vec4& color)
-	{
-		DrawQuad(glm::vec3(position.x, position.y, 0.0f), scale, color);
-	}
-
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const std::shared_ptr<Texture2D>& texture, float textureTiling, const glm::vec4& tintColor)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture, float textureTiling, const glm::vec4& tintColor)
 	{
 		constexpr int QuadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
@@ -178,9 +170,6 @@ namespace Origin
 			s_Data.TextureSlotIndex++;
 		}
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position))
-			* glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, 1.0f));
-
 		for (size_t i = 0; i < QuadVertexCount; i++)
 		{
 			s_Data.QuadVetexBufferPtr->Position = transform * s_Data.QuadVertexPosition[i];
@@ -192,6 +181,26 @@ namespace Origin
 		}
 		s_Data.QuadIndexCount += 6;
 		s_Data.Stats.Quad_Count++;
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const glm::vec4& color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+			* glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, 1.0f));
+
+		DrawQuad(transform, color);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& scale, const glm::vec4& color)
+	{
+		DrawQuad(glm::vec3(position.x, position.y, 0.0f), scale, color);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const std::shared_ptr<Texture2D>& texture, float textureTiling, const glm::vec4& tintColor)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position))
+			* glm::scale(glm::mat4(1.0f), glm::vec3(scale.x, scale.y, 1.0f));
+		DrawQuad(transform, texture, textureTiling, tintColor);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& scale, const std::shared_ptr<Texture2D>& texture, float textureTiling, const glm::vec4& tintColor)
@@ -404,6 +413,8 @@ namespace Origin
 		RenderCommand::DrawIndexed(s_Data.vertexArray, s_Data.QuadIndexCount);
 		s_Data.Stats.Draw_Calls++;
 	}
+
+	
 
 	void Renderer2D::StartBatch()
 	{

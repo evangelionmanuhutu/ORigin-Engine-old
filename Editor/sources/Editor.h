@@ -28,16 +28,17 @@ namespace Origin {
     void OnGuiRender() override;
 
   private:
+    Entity m_Square;
+
     glm::vec4 color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
+    glm::vec2 position = glm::vec2(0);
+    glm::vec2 scale = glm::vec2(1);
 
   private:
     ShaderLibrary m_ShaderLibrary;
     OrthoCameraController m_CameraController;
     std::shared_ptr<Framebuffer> m_Framebuffer;
-    std::shared_ptr<Texture2D> m_Texture, m_Sprites, m_Logo;
-    std::shared_ptr<SubTexture2D> m_StairsTexture;
-    std::shared_ptr<SubTexture2D> m_BarrelTexture;
-    std::shared_ptr<SubTexture2D> m_TreeTexture;
+    std::shared_ptr<Scene> m_ActiveScene;
 
     EditorViewport vp;
   };

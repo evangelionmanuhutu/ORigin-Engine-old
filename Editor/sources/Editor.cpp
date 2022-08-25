@@ -14,31 +14,26 @@ namespace Origin {
     fbSpec.Width = 1280;
     fbSpec.Height = 720;
     m_Framebuffer = Framebuffer::Create(fbSpec);
+    m_ActiveScene = std::make_shared<Scene>();
+
+    auto square = m_ActiveScene->CreateEntity();
+    square.AddComponent<TransformComponent>(square);
+    square.AddComponent<SpriteRendererComponent>(square, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
+    m_Square = square;
   }
 
   void Editor::OnUpdate(Timestep ts)
   {
-
-    float mouseX = (float)vp.GetMouseX();
-    float mouseY = (float)vp.GetMouseY();
-
-    mouseX = (mouseX / vp.GetWidth()) * 2 - 1;
-    mouseY = (mouseY / vp.GetHeight()) * 2 - 1;
-    mouseX = mouseX * m_CameraController.GetZoomLevel();
-    mouseY = mouseY * m_CameraController.GetZoomLevel();
+    m_CameraController.OnUpdate(ts);
 
     vp.Refresh(m_Framebuffer, m_CameraController);
-    RenderCommand::ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    RenderCommand::Clear();
 
-    m_CameraController.OnUpdate(ts);
     Renderer2D::ResetStats();
     Renderer2D::BeginScene(m_CameraController.GetCamera());
-    Renderer2D::DrawQuad(glm::vec3(mouseX, mouseY, 0.0f), glm::vec2(0.3f), glm::vec4(color));
-    Renderer2D::DrawQuad(glm::vec3(1.0f, 0.0f, -0.1f), glm::vec2(0.5f), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
-    Renderer2D::EndScene();
 
-    OGN_CORE_INFO("x {0} y {1}", mouseX, mouseY);
+    m_ActiveScene->OnUpdate(ts);
+    Renderer2D::EndScene();
   }
 
   bool Editor::OnWindowResize(WindowResizeEvent& e)
@@ -58,7 +53,10 @@ namespace Origin {
     vp.GuiViewport(m_Framebuffer);
 
     ImGui::Begin("Quad");
-    ImGui::ColorEdit4("color", glm::value_ptr(color));
+    auto& squareColor = m_Square.GetComponent<SpriteRendererComponent>().Color;
+    ImGui::DragFloat2("position", glm::value_ptr(position), 0.01f);
+    ImGui::DragFloat2("scale", glm::value_ptr(scale), 0.01f, 0);
+    ImGui::ColorEdit4("color", glm::value_ptr(squareColor));
     ImGui::End();
 
     ImGui::Begin("Conten Drawer");

@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "RenderCommand.h"
-#include "Origin\Component\Camera.h"
+#include "Origin\Scene\Component\Camera.h"
 
 namespace Origin
 {

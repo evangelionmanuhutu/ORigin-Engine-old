@@ -5,7 +5,7 @@
 #include "Origin\Renderer\Texture.h"
 #include "Origin\Renderer\SubTexture2D.h"
 
-#include "Origin\Component\Camera.h"
+#include "Origin\Scene\Component\Camera.h"
 
 #include "glm\glm.hpp"
 

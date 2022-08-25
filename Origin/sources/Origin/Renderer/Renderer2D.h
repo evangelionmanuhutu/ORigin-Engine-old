@@ -5,7 +5,7 @@
 #include "Origin\Renderer\Texture.h"
 #include "Origin\Renderer\SubTexture2D.h"
 
-#include "Origin\Component\Camera.h"
+#include "Origin\Scene\Component\Camera.h"
 
 #include "glm\glm.hpp"
 
@@ -20,6 +20,9 @@ namespace Origin
 		static void BeginScene(const OrthoCamera& camera);
 		static void EndScene();
 		static void Flush();
+
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4 color);
+		static void DrawQuad(const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		static void DrawQuad(const glm::vec3& position = glm::vec3(0.0f), const glm::vec2& scale = glm::vec2(1.0f), const glm::vec4& color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		static void DrawQuad(const glm::vec2& position = glm::vec2(0.0f), const glm::vec2& scale = glm::vec2(1.0f), const glm::vec4& color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
