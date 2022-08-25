@@ -27,12 +27,11 @@ project "Editor"
     includedirs {
         "%{wks.location}/Origin/sources",
         "%{IncludeDir.SPDLOG}",
-        "%{IncludeDir.STBI}",
         "%{IncludeDir.GLFW}",
-        "%{IncludeDir.IMGUI}",
         "%{IncludeDir.GLAD}",
-        "%{IncludeDir.GLM}",
         "%{IncludeDir.ENTT}",
+        "%{IncludeDir.IMGUI}",
+        "%{IncludeDir.GLM}",
     }
 
     defines {

@@ -1,6 +1,6 @@
 ﻿#pragma once
+#include "entt\entt.hpp"
 #include "Origin\Utils\Time.h"
-#include "entt.hpp"
 
 namespace Origin
 {
@@ -10,10 +10,8 @@ namespace Origin
 	{
 	public:
 		Scene();
-		~Scene();
 
-		Entity CreateEntity(const std::string& name = std::string());
-
+		Entity CreateEntity(const std::string& name);
 		entt::registry& Reg() { return m_Registry; }
 		void OnUpdate(Timestep time);
 
