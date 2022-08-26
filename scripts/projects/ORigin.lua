@@ -4,7 +4,7 @@ project "ORigin"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "Off"
+    staticruntime "on"
 
     targetdir (mainOutputdir)
     objdir (intermediateOutputdir)

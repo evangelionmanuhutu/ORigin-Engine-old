@@ -1,15 +1,15 @@
 ﻿#include "pch.h"
 #include "Scene.h"
 
-#include "Origin\Scene\Component\Component.h"
+#include "Component\Component.h"
 #include "Origin\Renderer\Renderer2D.h"
 
-#include <glm/glm.hpp>
+#include <glm\glm.hpp>
 
 #include "Entity.h"
 
-namespace Origin
-{
+namespace Origin {
+
 	static void DoMath(const glm::mat4& transform)
 	{
 
@@ -47,6 +47,10 @@ namespace Origin
 #endif
 	}
 
+	Scene::~Scene()
+	{
+	}
+
 	Entity Scene::CreateEntity(const std::string& name)
 	{
 		Entity entity = { m_Registry.create(), this };
@@ -56,13 +60,17 @@ namespace Origin
 		return entity;
 	}
 
-	void Scene::OnUpdate(Timestep time)
+	void Scene::OnUpdate(Timestep ts)
 	{
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group)
 		{
 			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
 			Renderer2D::DrawQuad(transform, sprite.Color);
 		}
+
+
 	}
+
 }

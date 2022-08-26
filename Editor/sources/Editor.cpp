@@ -14,7 +14,14 @@ namespace Origin {
     fbSpec.Width = 1280;
     fbSpec.Height = 720;
     m_Framebuffer = Framebuffer::Create(fbSpec);
-    //m_ActiveScene = std::make_shared<Scene>();
+    m_ActiveScene = std::make_shared<Scene>();
+
+    // Entity
+    auto square = m_ActiveScene->CreateEntity("Green Square");
+    square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+
+    m_Square = square;
+
   }
 
   void Editor::OnUpdate(Timestep ts)
@@ -25,7 +32,10 @@ namespace Origin {
 
     Renderer2D::ResetStats();
     Renderer2D::BeginScene(m_CameraController.GetCamera());
-    Renderer2D::DrawQuad(position, scale, color);
+
+    m_ActiveScene->OnUpdate(ts);
+
+    //Renderer2D::DrawQuad(position, scale, color);
     Renderer2D::EndScene();
   }
 
@@ -46,10 +56,10 @@ namespace Origin {
     vp.GuiViewport(m_Framebuffer);
 
     ImGui::Begin("Quad");
-    //auto& squareColor = m_Square.GetComponent<SpriteRendererComponent>().Color;
-    ImGui::DragFloat2("position", glm::value_ptr(position), 0.01f);
-    ImGui::DragFloat2("scale", glm::value_ptr(scale), 0.01f, 0);
-    ImGui::ColorEdit4("color", glm::value_ptr(color));
+    auto& squareColor = m_Square.GetComponent<SpriteRendererComponent>().Color;
+    //ImGui::DragFloat2("position", glm::value_ptr(position), 0.01f);
+    //ImGui::DragFloat2("scale", glm::value_ptr(scale), 0.01f, 0);
+    ImGui::ColorEdit4("color", glm::value_ptr(squareColor));
     ImGui::End();
 
     ImGui::Begin("Conten Drawer");

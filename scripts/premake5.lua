@@ -9,6 +9,11 @@ workspace "ORigin"
         "Dist"
     }
 
+    flags {
+
+		"MultiProcessorCompile"
+	}
+
     startproject "Editor"
 
     mainProjectFiles = "%{wks.location}/%{prj.name}"

@@ -32,6 +32,5 @@ namespace Origin
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
 		SpriteRendererComponent(const glm::vec4& color) : Color(color) {}
-		SpriteRendererComponent(const float r, const float g, const float b, const float a = 1.0f) : Color(r, g, b, a) {}
 	};
 }
