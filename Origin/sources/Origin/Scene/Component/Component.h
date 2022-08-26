@@ -1,5 +1,7 @@
 #pragma once
 #include "pch.h"
+#include "Origin\Scene\SceneCamera.h"
+
 #include <glm\glm.hpp>
 
 namespace Origin
@@ -32,5 +34,16 @@ namespace Origin
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
 		SpriteRendererComponent(const glm::vec4& color) : Color(color) {}
+		SpriteRendererComponent(float r, float g, float b, float, float a) : Color(r, g, b, a) {}
+	};
+
+	struct CameraComponent
+	{
+		SceneCamera Camera;
+		bool Primary = true;
+		bool FixedAspectRatio = false;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
 	};
 }

@@ -114,6 +114,16 @@ namespace Origin
 		StartBatch();
 	}
 
+	void Renderer2D::BeginScene(const Camera& camera, glm::mat4& transform)
+	{
+		glm::mat4 viewProjection = camera.GetProjection() * glm::inverse(transform);
+
+		s_Data.shader->Bind();
+		s_Data.shader->SetMatrix("u_ViewProjection", viewProjection);
+
+		StartBatch();
+	}
+
 	void Renderer2D::EndScene()
 	{
 		Flush();

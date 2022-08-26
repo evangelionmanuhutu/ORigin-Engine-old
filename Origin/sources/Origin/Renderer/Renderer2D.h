@@ -14,10 +14,14 @@ namespace Origin
 	class Renderer2D
 	{
 	public:
+
+		
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const Camera& camera, glm::mat4& transform);
 		static void BeginScene(const OrthoCamera& camera);
+
 		static void EndScene();
 		static void Flush();
 
