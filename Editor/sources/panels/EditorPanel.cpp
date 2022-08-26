@@ -82,16 +82,7 @@ namespace Origin
       ImGui::End();
     }
 
-    if (guiDebugInfo)
-    {
-      ImGui::Begin("Debug Info");
-      ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-      ImGui::Text("OpenGL Version : (%s)", glGetString(GL_VERSION));
-      ImGui::Text("ImGui version : (%s)", IMGUI_VERSION);
-      ImGui::Checkbox("vSync", &Application::Get().SetVSync);
-      ImGui::Separator();
-      ImGui::End();
-    }
+    
 
     if (guiMenuStyle)
     {

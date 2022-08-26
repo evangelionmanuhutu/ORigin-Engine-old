@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "Scene.h"
-
 #include "Component\Component.h"
 #include "Origin\Renderer\Renderer2D.h"
 
@@ -29,6 +28,22 @@ namespace Origin {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
+
+		// Update Scripts
+		{
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+				{
+					if (!nsc.Instance)
+					{
+						nsc.InstantiateFunction();
+						nsc.Instance->m_Entity = { entity, this };
+						nsc.OnCreateFunction(nsc.Instance);
+					}
+
+					nsc.OnUpdateFunction(nsc.Instance, ts);
+				});
+
+		}
 
 		// Render 2D
 		Camera* mainCamera = nullptr;

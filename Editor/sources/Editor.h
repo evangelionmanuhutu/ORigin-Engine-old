@@ -31,6 +31,8 @@ namespace Origin {
     void VpGui();
 
     Entity m_SquareEntity;
+    Entity m_SquareEntity2;
+
     Entity m_CameraEntity;
     Entity m_SecondCameraEntity;
     bool CamPrimary = true;
@@ -46,5 +48,8 @@ namespace Origin {
     ShaderLibrary m_ShaderLibrary;
     std::shared_ptr<Framebuffer> m_Framebuffer;
     std::shared_ptr<Scene> m_ActiveScene;
+    int mouseX;
+    int mouseY;
   };
+
 }

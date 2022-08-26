@@ -16,23 +16,54 @@ namespace Origin {
     m_Framebuffer = Framebuffer::Create(fbSpec);
     m_ActiveScene = std::make_shared<Scene>();
 
-    m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+    m_SquareEntity = m_ActiveScene->CreateEntity("Entity 1");
     m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.5f, 0.0f, 1.0f });
 
     m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
     m_CameraEntity.AddComponent<CameraComponent>();
     
-    
     m_SecondCameraEntity = m_ActiveScene->CreateEntity("Clip-Camera Entity");
     auto& cc = m_SecondCameraEntity.AddComponent<CameraComponent>();
     cc.Primary = false;
+
+    class CameraController : public ScriptableEntity
+    {
+    public:
+
+      void OnCreate()
+      {
+        
+      }
+
+      void OnDestroy()
+      {
+
+      }
+
+      void OnUpdate(Timestep time)
+      {
+        auto& Transform = GetComponent<TransformComponent>().Transform;
+        float speed = 5.0f;
+
+        if (Input::IsKeyPressed(OGN_KEY_A)) 
+          Transform[3][0] -= speed * time;
+        else if (Input::IsKeyPressed(OGN_KEY_D))
+          Transform[3][0] += speed * time;
+        if (Input::IsKeyPressed(OGN_KEY_W))
+          Transform[3][1] += speed * time;
+        else if (Input::IsKeyPressed(OGN_KEY_S))
+          Transform[3][1] -= speed * time;
+      }
+
+    };
+
+    m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
   }
 
   void Editor::OnUpdate(Timestep ts)
   {
     VpRefresh();
     Renderer2D::ResetStats();
-
     m_ActiveScene->OnUpdate(ts);
   }
 
@@ -77,9 +108,16 @@ namespace Origin {
 
       if (ImGui::DragFloat("Projection Size", &OrthoSize, 0.01f, 1.0f, 100.0f))
         camera.SetOrthographicSize(OrthoSize);
-
       ImGui::End();
     }
+
+    ImGui::Begin("Debug Info");
+    ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    ImGui::Text("OpenGL Version : (%s)", glGetString(GL_VERSION));
+    ImGui::Text("ImGui version : (%s)", IMGUI_VERSION);
+    ImGui::Separator();
+    ImGui::Text("Mouse Position (%d, %d)", mouseX, mouseY);
+    ImGui::End();
 
     EditorPanel::EndDockspace();
   }
@@ -137,8 +175,8 @@ namespace Origin {
     glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
     my = viewportSize.y - my;
 
-    int mouseX = (int)mx;
-    int mouseY = (int)my;
+    mouseX = (int)mx;
+    mouseY = (int)my;
 
     if (mouseX < 0) mouseX = 0;
     else if (mouseX > (int)viewportSize.x) mouseX = (int)viewportSize.x;
