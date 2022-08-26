@@ -5,7 +5,7 @@ project "Sandbox2D"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "off"
+    staticruntime "on"
     links "ORigin"
 
     targetdir (mainOutputdir)
@@ -66,7 +66,7 @@ project "Sandbox3D"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "off"
+    staticruntime "on"
     links "ORigin"
 
     targetdir (mainOutputdir)
