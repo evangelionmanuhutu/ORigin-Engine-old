@@ -27,10 +27,10 @@ include "dependencies/Dependencies.lua"
 
 group "Engine"
 include "projects/ORigin.lua"
+include "projects/Editor.lua"
 group ""
 
 group"Programs"
-include "projects/Editor.lua"
 include "projects/Sandbox.lua"
-include "projects/ORiginBuilderTools.lua"
+include "projects/BuilderTools.lua"
 group ""

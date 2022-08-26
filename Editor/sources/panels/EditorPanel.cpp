@@ -5,91 +5,10 @@ namespace Origin
 {
   static bool guiDockingSpaceOpen = true;
   static bool guiMenuFullscreen = true;
-  static bool guiMenuStyle = true;
-  static bool guiViewportOpen = true;
+  static bool guiMenuStyle = false;
   static bool guiRenderStatus = true;
   static bool guiDebugInfo = true;
   static bool guiImGuiDemoWindow = true;
-  glm::vec2 viewportSize = { 0.0f, 0.0f };
-  glm::vec2 m_ViewportBounds[2];
-
-
-  EditorViewport::~EditorViewport()
-  {
-  }
-
-  void EditorViewport::Refresh(const std::shared_ptr<Framebuffer>& framebuffer, OrthoCameraController& cameraController, const glm::vec4& clearColor)
-  {
-    if (FramebufferSpecification spec = framebuffer->GetSpecification();
-      viewportSize.x > 0.0f && viewportSize.y > 0.0f &&
-      (spec.Width != viewportSize.x || spec.Height != viewportSize.y))
-    {
-      framebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-      cameraController.OnResize(viewportSize.x, viewportSize.y);
-    }
-    framebuffer->Bind();
-
-    RenderCommand::ClearColor(clearColor);
-    RenderCommand::Clear();
-  }
-
-
-  void EditorViewport::GuiViewport(const std::shared_ptr<Framebuffer>& framebuffer)
-  {
-    if (guiImGuiDemoWindow)
-      ImGui::ShowDemoWindow(&guiImGuiDemoWindow);
-
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar
-      | ImGuiWindowFlags_NoScrollWithMouse
-      | ImGuiWindowFlags_NoCollapse;
-
-    if (guiViewportOpen)
-    {
-      ImGui::Begin("Viewport", &guiViewportOpen, window_flags);
-
-      auto viewportOffset = ImGui::GetCursorPos();
-
-      if (ImGui::IsWindowHovered())
-      {
-        ImGuiIO& io = ImGui::GetIO();
-        io.WantCaptureMouse = false;
-      }
-
-      ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-      viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-
-      uint32_t viewportID = framebuffer->GetColorAttachmentRendererID();
-      ImGui::Image((void*)viewportID, ImVec2(viewportSize.x, viewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
-
-      auto windowSize = ImGui::GetWindowSize();
-      m_ViewportSize = viewportSize;
-
-      ImVec2 minBound = ImGui::GetWindowPos();
-      minBound.x += viewportOffset.x;
-      minBound.y += viewportOffset.y;
-
-      ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
-      m_ViewportBounds[0] = { minBound.x, minBound.y };
-      m_ViewportBounds[1] = { maxBound.x, maxBound.y };
-
-      auto [mx, my] = ImGui::GetMousePos();
-      mx -= m_ViewportBounds[0].x;
-      my -= m_ViewportBounds[0].y;
-      glm::vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
-      my = viewportSize.y - my;
-
-      mouseX = (int)mx;
-      mouseY = (int)my;
-
-      if (mouseX < 0) mouseX = 0;
-      else if (mouseX > (int)viewportSize.x) mouseX = (int)viewportSize.x;
-      if (mouseY < 0) mouseY = 0;
-      else if (mouseY > (int)viewportSize.y) mouseY = (int)viewportSize.y;
-
-      ImGui::End();
-    }
-  }
-
 
   // Editor Panel
 
@@ -143,7 +62,6 @@ namespace Origin
 
       if (ImGui::BeginMenu("Window"))
       {
-        ImGui::MenuItem("Viewport", NULL, &guiViewportOpen);
         ImGui::MenuItem("Style Editor", NULL, &guiMenuStyle);
         ImGui::MenuItem("Render Status", NULL, &guiRenderStatus);
         ImGui::MenuItem("Debug Info", NULL, &guiDebugInfo);
@@ -164,16 +82,7 @@ namespace Origin
       ImGui::End();
     }
 
-    if (guiDebugInfo)
-    {
-      ImGui::Begin("Debug Info");
-      ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-      ImGui::Text("OpenGL Version : (%s)", glGetString(GL_VERSION));
-      ImGui::Text("ImGui version : (%s)", IMGUI_VERSION);
-      ImGui::Checkbox("vSync", &Application::Get().SetVSync);
-      ImGui::Separator();
-      ImGui::End();
-    }
+    
 
     if (guiMenuStyle)
     {

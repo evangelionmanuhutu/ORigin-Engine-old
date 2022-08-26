@@ -19,7 +19,6 @@ namespace Origin {
       EventDispatcher dispatcher(e);
       dispatcher.Dispatch<MouseMovedEvent>(OGN_BIND_EVENT_FN(Editor::OnMouseMovedEvent));
       dispatcher.Dispatch<WindowResizeEvent>(OGN_BIND_EVENT_FN(Editor::OnWindowResize));
-      m_CameraController.OnEvent(e);
     }
 
     bool OnWindowResize(WindowResizeEvent& e);
@@ -28,18 +27,29 @@ namespace Origin {
     void OnGuiRender() override;
 
   private:
-    Entity m_Square;
+    void VpRefresh();
+    void VpGui();
+
+    Entity m_SquareEntity;
+    Entity m_SquareEntity2;
+
+    Entity m_CameraEntity;
+    Entity m_SecondCameraEntity;
+    bool CamPrimary = true;
 
     glm::vec4 color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
     glm::vec2 position = glm::vec2(0);
     glm::vec2 scale = glm::vec2(1);
 
+    glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
+    glm::vec2 m_ViewportBounds[2];
+
   private:
     ShaderLibrary m_ShaderLibrary;
-    OrthoCameraController m_CameraController;
     std::shared_ptr<Framebuffer> m_Framebuffer;
     std::shared_ptr<Scene> m_ActiveScene;
-
-    EditorViewport vp;
+    int mouseX;
+    int mouseY;
   };
+
 }

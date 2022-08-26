@@ -25,14 +25,6 @@ defaultArgument =
       }
     },
 
-    "ORiginBuilderTools": {
-      "Projects": {
-        "ORiginBuilderTools": {
-            "StartProject": true
-        }
-      }
-    },
-
     "Editor": {
       "Projects": {
         "Editor": {
