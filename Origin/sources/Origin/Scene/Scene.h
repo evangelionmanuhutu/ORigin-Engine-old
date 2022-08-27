@@ -13,7 +13,7 @@ namespace Origin
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
-		void OnUpdate(Timestep ts);
+		void OnUpdate(Timestep time);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 	private:
@@ -21,6 +21,7 @@ namespace Origin
 		uint32_t m_ViewportWidth, m_ViewportHeight = 0;
 
 		friend class Entity;
+		friend class SceneHierarchyPanel;
 	};
 
 }

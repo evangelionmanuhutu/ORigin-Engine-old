@@ -9,7 +9,11 @@ namespace Origin {
 
 	void Editor::OnAttach()
   {
-    EditorTheme::Apply();
+    EditorTheme::ApplyRayTek();
+    //ImGui::StyleColorsLight();
+    /*ImGuiIO& io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF("assets/fonts/JetBrainsMono-SemiBold.ttf", 16);*/
+
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
     fbSpec.Height = 720;
@@ -17,14 +21,29 @@ namespace Origin {
     m_ActiveScene = std::make_shared<Scene>();
 
     m_SquareEntity = m_ActiveScene->CreateEntity("Entity 1");
-    m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.5f, 0.0f, 1.0f });
+    m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
 
-    m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+    m_SquareEntity2 = m_ActiveScene->CreateEntity("Entity 2");
+    m_SquareEntity2.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
+
+    m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
     m_CameraEntity.AddComponent<CameraComponent>();
-    
-    m_SecondCameraEntity = m_ActiveScene->CreateEntity("Clip-Camera Entity");
-    auto& cc = m_SecondCameraEntity.AddComponent<CameraComponent>();
-    cc.Primary = false;
+
+    class EntityController : public ScriptableEntity
+    {
+      void OnCreate()
+      {
+        auto& transform = GetComponent<TransformComponent>().Transform;
+        transform[3][0] = 2.0f;
+      }
+
+      void OnUpdate(Timestep time)
+      {
+      }
+    };
+
+    m_SquareEntity2.AddComponent<NativeScriptComponent>().Bind<EntityController>();
+
 
     class CameraController : public ScriptableEntity
     {
@@ -32,12 +51,8 @@ namespace Origin {
 
       void OnCreate()
       {
-        
-      }
-
-      void OnDestroy()
-      {
-
+        auto& transform = GetComponent<TransformComponent>().Transform;
+        transform[3][2] = 8.0f;
       }
 
       void OnUpdate(Timestep time)
@@ -54,10 +69,10 @@ namespace Origin {
         else if (Input::IsKeyPressed(OGN_KEY_S))
           Transform[3][1] -= speed * time;
       }
-
     };
 
     m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+    m_SceneHierarchyPanel.SetContext(m_ActiveScene);
   }
 
   void Editor::OnUpdate(Timestep ts)
@@ -72,44 +87,7 @@ namespace Origin {
     EditorPanel::BeginDockspace();
     EditorPanel::MenuBar();
     VpGui();
-
-    if (m_SquareEntity) {
-      ImGui::Begin("Quad");
-      auto& Tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
-      ImGui::Text("%s", Tag.c_str());
-
-      auto& squarePosition = m_SquareEntity.GetComponent<TransformComponent>().Transform[3];
-      ImGui::DragFloat2("Postion", glm::value_ptr(squarePosition), 0.01f);
-
-      auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-      ImGui::ColorPicker4("Color", glm::value_ptr(squareColor));
-
-      ImGui::End();
-    }
-
-    if (m_CameraEntity)
-    {
-      ImGui::Begin("Camera");
-
-      auto& Tag = m_CameraEntity.GetComponent<TagComponent>().Tag;
-      ImGui::Text("%s", Tag.c_str());
-
-      auto& Transform = m_CameraEntity.GetComponent<TransformComponent>().Transform[3];
-      ImGui::DragFloat3("Transform", glm::value_ptr(Transform), 0.01f);
-      if (ImGui::Checkbox("Primary", &CamPrimary))
-      {
-        m_CameraEntity.GetComponent<CameraComponent>().Primary = CamPrimary;
-        m_SecondCameraEntity.GetComponent<CameraComponent>().Primary = !CamPrimary;
-      }
-
-      ImGui::Text("Camera Settings");
-      auto& camera = m_CameraEntity.GetComponent<CameraComponent>().Camera;
-      float OrthoSize = camera.GetOrthographicSize();
-
-      if (ImGui::DragFloat("Projection Size", &OrthoSize, 0.01f, 1.0f, 100.0f))
-        camera.SetOrthographicSize(OrthoSize);
-      ImGui::End();
-    }
+    m_SceneHierarchyPanel.OnImGuiRender();
 
     ImGui::Begin("Debug Info");
     ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -143,6 +121,11 @@ namespace Origin {
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar
       | ImGuiWindowFlags_NoScrollWithMouse
       | ImGuiWindowFlags_NoCollapse;
+
+    ImGuiWindowClass window_class;
+    window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_AutoHideTabBar;
+
+    ImGui::SetNextWindowClass(&window_class);
     ImGui::Begin("Viewport", nullptr, window_flags);
 
     auto viewportOffset = ImGui::GetCursorPos();
@@ -176,7 +159,7 @@ namespace Origin {
     my = viewportSize.y - my;
 
     mouseX = (int)mx;
-    mouseY = (int)my;
+    mouseY = (int)my - 6;
 
     if (mouseX < 0) mouseX = 0;
     else if (mouseX > (int)viewportSize.x) mouseX = (int)viewportSize.x;
