@@ -20,7 +20,7 @@ workspace "ORigin"
     vendorProjectFiles = "%{wks.location}/Origin/vendor/projectFiles"
 
     mainOutputdir = "%{wks.location}/bin/%{cfg.buildcfg}/%{prj.name}"
-    intermediateOutputdir = "%{wks.location}/bin-int/%{cfg.buildcfg}/%{prj.name}"
+    intermediateOutputdir = "%{wks.location}/bin/Intermediate/%{cfg.buildcfg}/%{prj.name}"
 
 include "projects/ProjectSwitcher.lua"
 include "dependencies/Dependencies.lua"

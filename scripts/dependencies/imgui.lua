@@ -8,7 +8,7 @@ project "ImGui"
 
     includedirs{
         "%{wks.location}/Origin/vendor/imgui/",
-        "%{wks.location}/Origin/Vendor/glfw/include",
+        "%{wks.location}/Origin/vendor/glfw/include",
     }
 
     files{

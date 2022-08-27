@@ -6,6 +6,13 @@ namespace Origin {
 
 	class EditorTheme
 	{
+
+	public:
+		static void ApplyDarkPurple();
+		static void ApplyRayTek();
+
+		static void SetColors(int backGroundColor, int textColor, int mainColor, int mainAccentColor, int highlightColor);
+
 	private:
 		// 0xRRGGBBAA
 		inline static int BackGroundColor = 0x25213100;
@@ -39,10 +46,6 @@ namespace Origin {
 		static ImVec4 Hovered(ImVec4 c) { return Lighten(c, 0.2f); }
 		static ImVec4 Active(ImVec4 c) { return Lighten(ImVec4(c.x, c.y, c.z, 1.0f), 0.1f); }
 		static ImVec4 Collapsed(ImVec4 c) { return Darken(c, 0.2f); }
-
-	public:
-		static void SetColors(int backGroundColor, int textColor, int mainColor, int mainAccentColor, int highlightColor);
-		static void Apply();
 	};
 
 }

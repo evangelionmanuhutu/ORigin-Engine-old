@@ -3,6 +3,8 @@
 #include "Component\Component.h"
 #include "Origin\Renderer\Renderer2D.h"
 
+#include "ScriptableEntity.h"
+
 #include <glm\glm.hpp>
 
 #include "Entity.h"
@@ -26,21 +28,21 @@ namespace Origin {
 		return entity;
 	}
 
-	void Scene::OnUpdate(Timestep ts)
+	void Scene::OnUpdate(Timestep time)
 	{
-
 		// Update Scripts
 		{
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 				{
 					if (!nsc.Instance)
 					{
-						nsc.InstantiateFunction();
-						nsc.Instance->m_Entity = { entity, this };
-						nsc.OnCreateFunction(nsc.Instance);
+						nsc.Instance = nsc.InstantiateScript();
+						nsc.Instance->m_Entity = Entity{ entity, this };
+						nsc.Instance->OnCreate();
 					}
 
-					nsc.OnUpdateFunction(nsc.Instance, ts);
+					nsc.Instance->OnUpdate(time);
+
 				});
 
 		}
@@ -52,7 +54,7 @@ namespace Origin {
 		auto view = m_Registry.view<CameraComponent, TransformComponent>();
 		for (auto entity : view)
 		{
-			auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+			auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 			if (camera.Primary)
 			{
 				mainCamera = &camera.Camera;
@@ -69,7 +71,7 @@ namespace Origin {
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
-				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
 				Renderer2D::DrawQuad(transform, sprite.Color);
 			}
