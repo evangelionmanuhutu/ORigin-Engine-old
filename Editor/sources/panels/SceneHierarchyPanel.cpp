@@ -137,11 +137,11 @@ namespace Origin
 
 				if (cameraComponent.Camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
 				{
-					float perspectiveFov = camera.GetPerspectiveFov();
-					camera.SetPerspectiveFov(perspectiveFov);
+					float perspectiveFov = glm::degrees(camera.GetPerspectiveFov());
+					camera.SetPerspectiveFov(glm::radians(perspectiveFov));
 
 					if (ImGui::DragFloat("Perspective FOV", &perspectiveFov, 0.01f, 0.01f, 10000.0f))
-						camera.SetPerspectiveFov(perspectiveFov);
+						camera.SetPerspectiveFov(glm::radians(perspectiveFov));
 
 					float perspectiveNearClip = camera.GetPerspectiveNearClip();
 					if (ImGui::DragFloat("Near Clip", &perspectiveNearClip, 0.01f))

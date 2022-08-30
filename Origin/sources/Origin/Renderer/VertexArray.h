@@ -6,7 +6,7 @@ namespace Origin {
 	class VertexArray
 	{
 	public:
-		virtual ~VertexArray() {}
+		virtual ~VertexArray() = default;
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
@@ -18,7 +18,6 @@ namespace Origin {
 		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const = 0;
 
 		static std::shared_ptr<VertexArray> Create();
-
 	};
 
 }

@@ -49,8 +49,8 @@ namespace Origin
 			uint32_t Draw_Calls = 0;
 			uint32_t Quad_Count = 0;
 
-			uint32_t GetTotalVertexCount() { return Quad_Count * 4; }
-			uint32_t GetTotalIndexCount() { return Quad_Count * 6; }
+			uint32_t GetTotalVertexCount() const { return Quad_Count * 4; }
+			uint32_t GetTotalIndexCount() const { return Quad_Count * 6; }
 		};
 
 		static void ResetStats();

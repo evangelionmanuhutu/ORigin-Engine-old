@@ -28,8 +28,8 @@ namespace Origin
     stbi_set_flip_vertically_on_load(1);
 
     stbi_uc* data = nullptr;
-
     data = stbi_load(path.c_str(),  &width, &height, &bpp, 0);
+
     OGN_CORE_ASSERT(data, "Failed to load texture!");
 
     m_Width = width;
