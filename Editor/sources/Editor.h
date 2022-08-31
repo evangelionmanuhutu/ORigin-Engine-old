@@ -34,6 +34,9 @@ namespace Origin {
     Entity m_SquareEntity;
     Entity m_SquareEntity2;
     Entity m_CameraEntity;
+    Entity m_CameraEntity2;
+
+    glm::vec4 clearColor = glm::vec4(0.0f, 0.074f, 0.184f, 1.0f);
 
     glm::vec4 color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
     glm::vec2 position = glm::vec2(0);

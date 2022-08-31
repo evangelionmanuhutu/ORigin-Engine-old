@@ -10,9 +10,6 @@ namespace Origin {
 	void Editor::OnAttach()
   {
     EditorTheme::ApplyRayTek();
-    //ImGui::StyleColorsLight();
-    /*ImGuiIO& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("assets/fonts/JetBrainsMono-SemiBold.ttf", 16);*/
 
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
@@ -33,8 +30,8 @@ namespace Origin {
     {
       void OnCreate()
       {
-        auto& transform = GetComponent<TransformComponent>().Transform;
-        transform[3][0] = 2.0f;
+        auto& transform = GetComponent<TransformComponent>();
+        transform.Translation.x = 2.0f;
       }
 
       void OnUpdate(Timestep time)
@@ -51,23 +48,26 @@ namespace Origin {
 
       void OnCreate()
       {
-        auto& transform = GetComponent<TransformComponent>().Transform;
-        transform[3][2] = 8.0f;
+        auto& transform = GetComponent<TransformComponent>();
+        transform.Translation.z = 8.0f;
       }
 
       void OnUpdate(Timestep time)
       {
-        auto& Transform = GetComponent<TransformComponent>().Transform;
+        auto& Translation = GetComponent<TransformComponent>().Translation;
+
         float speed = 5.0f;
+        if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT)) 
+          speed = 10.0f;
 
         if (Input::IsKeyPressed(OGN_KEY_A)) 
-          Transform[3][0] -= speed * time;
+          Translation.x -= speed * time;
         else if (Input::IsKeyPressed(OGN_KEY_D))
-          Transform[3][0] += speed * time;
+          Translation.x += speed * time;
         if (Input::IsKeyPressed(OGN_KEY_W))
-          Transform[3][1] += speed * time;
+          Translation.y += speed * time;
         else if (Input::IsKeyPressed(OGN_KEY_S))
-          Transform[3][1] -= speed * time;
+          Translation.y -= speed * time;
       }
     };
 
@@ -95,6 +95,8 @@ namespace Origin {
     ImGui::Text("ImGui version : (%s)", IMGUI_VERSION);
     ImGui::Separator();
     ImGui::Text("Mouse Position (%d, %d)", mouseX, mouseY);
+    ImGui::ColorEdit4("Background", glm::value_ptr(clearColor));
+
     ImGui::End();
 
     EditorPanel::EndDockspace();
@@ -112,7 +114,7 @@ namespace Origin {
     }
     m_Framebuffer->Bind();
 
-    RenderCommand::ClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    RenderCommand::ClearColor(clearColor);
     RenderCommand::Clear();
   }
 

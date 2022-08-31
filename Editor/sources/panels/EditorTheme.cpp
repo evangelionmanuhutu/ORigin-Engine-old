@@ -98,21 +98,24 @@ namespace Origin
 		ImGuiStyle* style = &ImGui::GetStyle();
 
 		// frame
-		style->FramePadding.x = 1;
+		style->FramePadding.x = 5;
 		style->FramePadding.y = 1;
+		style->FrameRounding = 4.0f;
 
 		// window
 		style->WindowMenuButtonPosition = 0;
 		style->WindowTitleAlign.x = 0.5;
 		style->WindowTitleAlign.y = 0.5;
-		style->WindowPadding = ImVec2(3.0f, 3.0f);
-
-		style->FrameRounding = 4.0f;
-		style->ItemSpacing = ImVec2(12, 8);
-		style->ItemInnerSpacing = ImVec2(8, 6);
-		style->ScrollbarSize = 15.0f;
-		style->ScrollbarRounding = 9.0f;
+		style->WindowPadding = ImVec2(0.0f, 0.0f);
+		style->WindowBorderSize = 0;
+		style->ScrollbarSize = 10.0f;
+		style->ScrollbarRounding = 5.0f;
 		style->GrabRounding = 3.0f;
+
+		// Item
+		style->ItemSpacing = ImVec2(5, 5);
+		style->ItemInnerSpacing = ImVec2(8, 6);
+		style->IndentSpacing = 10.0f;
 
 
 		style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);

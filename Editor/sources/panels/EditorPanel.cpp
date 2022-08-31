@@ -30,35 +30,6 @@ namespace Origin
 
     	ImGuiStyle& style = ImGui::GetStyle();
       GLFWwindow* window = Application::Get().GetWindow().getWindow();
-      
-      if (ExitWindow)
-      {
-        style.WindowPadding.x = 20;
-        style.FramePadding.x = 6;
-
-        int width, height;
-        glfwGetWindowSize(window, &width, &height);
-        ImGui::SetNextWindowPos(ImVec2((float)width / 2.0f, (float)height / 2.0f));
-        ImGui::SetNextWindowSize(ImVec2(140.0f, 64.0f));
-
-        ImGui::Begin("Quit", nullptr, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize);
-
-        ImGui::Text("Are you sure ?");
-
-        if (ImGui::Button(" Yes "))
-          Application::Get().Close();
-
-        ImGui::SameLine();
-        if(ImGui::Button(" No ")) ExitWindow = false;
-
-        ImGui::End();
-      }
-
-      else
-      {
-        style.WindowPadding.x = 2;
-        style.FramePadding.x = 1;
-      }
 
       if (ImGui::BeginMenu("Window"))
       {

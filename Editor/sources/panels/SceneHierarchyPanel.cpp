@@ -1,4 +1,6 @@
 #include "Origin\Utils\log.h"
+#include "Origin\IO\Input.h"
+#include "Origin\IO\KeyCodes.h"
 #include "SceneHierarchyPanel.h"
 #include "Origin\Scene\Component\Component.h"
 
@@ -6,6 +8,7 @@
 #include <glm\gtc\type_ptr.hpp>
 
 #include <imgui.h>
+#include <imgui_internal.h>
 
 namespace Origin
 {
@@ -65,6 +68,61 @@ namespace Origin
 		}
 	}
 
+	static void DrawVec3Control(const std::string& label, glm::vec3& values, float speed = 0.025f, float resetValue = 0.0f, float coloumnWidth = 100.0f)
+	{
+		ImGui::PushID(label.c_str());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, coloumnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+
+		float lineHeight = GImGui->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = ImVec2(lineHeight + 3.0f, lineHeight);
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.3f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.1f, 1.0f));
+		if (ImGui::Button("X", buttonSize))
+			values.x = resetValue;
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &values.x, speed);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleColor(3);
+
+		
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.6f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.8f, 0.1f, 1.0f));
+		if (ImGui::Button("Y", buttonSize))
+			values.y = resetValue;
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &values.y, speed);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		ImGui::PopStyleColor(3);
+
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.8f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.3f, 0.9f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.8f, 1.0f));
+		if (ImGui::Button("Z", buttonSize))
+			values.z = resetValue;
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &values.z, speed);
+		ImGui::PopItemWidth();
+		ImGui::PopStyleColor(3);
+
+		ImGui::PopStyleVar(1);
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
 	void SceneHierarchyPanel::DrawComponent(Entity entity)
 	{
 		if (entity.HasComponent<TagComponent>())
@@ -84,10 +142,11 @@ namespace Origin
 		{
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
 			{
-				auto& transform = entity.GetComponent<TransformComponent>().Transform;
-				ImGui::DragFloat3("Translation", glm::value_ptr(transform[3]), 0.01f);
+				auto& transform = entity.GetComponent<TransformComponent>();
+				DrawVec3Control("Translation", transform.Translation);
+				DrawVec3Control("Rotation", transform.Rotation);
+				DrawVec3Control("Scale", transform.Scale, 0.01f, 1.0f);
 
-				ImGui::Separator();
 				ImGui::TreePop();
 			}
 		}
@@ -99,7 +158,6 @@ namespace Origin
 				auto& spriteComponent = entity.GetComponent<SpriteRendererComponent>();
 				ImGui::ColorEdit4("Color", glm::value_ptr(spriteComponent.Color));
 
-				ImGui::Separator();
 				ImGui::TreePop();
 			}
 		}
@@ -110,8 +168,6 @@ namespace Origin
 			{
 				auto& cameraComponent = entity.GetComponent<CameraComponent>();
 				auto& camera = cameraComponent.Camera;
-
-				//ImGui::Checkbox("Primary", &cameraComponent.Primary);
 
 				const char* projectionTypeString[] = { "Perspective", "Orthographic" };
 				const char* currentProjectionTypeString = projectionTypeString[(int)cameraComponent.Camera.GetProjectionType()];
@@ -140,15 +196,15 @@ namespace Origin
 					float perspectiveFov = glm::degrees(camera.GetPerspectiveFov());
 					camera.SetPerspectiveFov(glm::radians(perspectiveFov));
 
-					if (ImGui::DragFloat("Perspective FOV", &perspectiveFov, 0.01f, 0.01f, 10000.0f))
+					if (ImGui::DragFloat("FOV", &perspectiveFov, 0.1f, 0.01f, 10000.0f))
 						camera.SetPerspectiveFov(glm::radians(perspectiveFov));
 
 					float perspectiveNearClip = camera.GetPerspectiveNearClip();
-					if (ImGui::DragFloat("Near Clip", &perspectiveNearClip, 0.01f))
+					if (ImGui::DragFloat("Near Clip", &perspectiveNearClip, 0.1f))
 						camera.SetPerspectiveNearClip(perspectiveNearClip);
 
 					float perspectiveFarClip = camera.GetPerspectiveFarClip();
-					if (ImGui::DragFloat("Far Clip", &perspectiveFarClip, 0.01f))
+					if (ImGui::DragFloat("Far Clip", &perspectiveFarClip, 0.1f))
 						camera.SetPerspectiveFarClip(perspectiveFarClip);
 				}
 
@@ -157,21 +213,21 @@ namespace Origin
 					float orthoSize = camera.GetOrthographicSize();
 					camera.SetOrthographicSize(orthoSize);
 
-					if (ImGui::DragFloat("Ortho Size", &orthoSize, 0.01f, 1.0f, 100.0f))
+					if (ImGui::DragFloat("Ortho Size", &orthoSize, 0.1f, 1.0f, 100.0f))
 						camera.SetOrthographicSize(orthoSize);
 
 					float orthoNearClip = camera.GetOrthographicNearClip();
-					if (ImGui::DragFloat("Near Clip", &orthoNearClip, 0.01f, -1.0f, 10.0f))
+					if (ImGui::DragFloat("Near Clip", &orthoNearClip, 0.1f, -1.0f, 10.0f))
 						camera.SetOrthographicNearClip(orthoNearClip);
 
 					float orthoFarClip = camera.GetOrthographicFarClip();
-					if(ImGui::DragFloat("Far Clip", &orthoFarClip, 0.01f, 10.0f, 100.0f))
+					if(ImGui::DragFloat("Far Clip", &orthoFarClip, 0.1f, 10.0f, 100.0f))
 						camera.SetOrthographicFarClip(orthoFarClip);
 
 					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComponent.FixedAspectRatio);
 
 				}
-				ImGui::Separator();
+
 				ImGui::TreePop();
 			}
 		}

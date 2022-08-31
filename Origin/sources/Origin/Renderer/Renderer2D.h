@@ -14,8 +14,6 @@ namespace Origin
 	class Renderer2D
 	{
 	public:
-
-		
 		static void Init();
 		static void Shutdown();
 
@@ -25,6 +23,11 @@ namespace Origin
 		static void EndScene();
 		static void Flush();
 
+	private:
+		static void StartBatch();
+		static void NextBatch();
+
+	public:
 		static void DrawQuad(const glm::mat4& transform, const glm::vec4 color);
 		static void DrawQuad(const glm::mat4& transform, const std::shared_ptr<Texture2D>& texture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
@@ -55,9 +58,6 @@ namespace Origin
 
 		static void ResetStats();
 		static Statistics GetStats();
-
-	private:
-		static void StartBatch();
-		static void NextBatch();
+	
 	};
 }
