@@ -53,11 +53,9 @@ namespace Origin
       ImGui::End();
     }
 
-    
-
     if (guiMenuStyle)
     {
-      ImGui::Begin("Style Editor");
+      ImGui::Begin("Style Editor", &guiMenuStyle);
       ImGui::ShowStyleEditor();
       ImGui::End();
     }
@@ -84,18 +82,29 @@ namespace Origin
     if (guiDockingSpaceOpen == false)
       Application::Get().Close();
 
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1, 2));
+
     ImGui::Begin("Origin", &guiDockingSpaceOpen, window_flags);
 
     ImGuiIO& io = ImGui::GetIO();
+    ImGuiStyle& style = ImGui::GetStyle();
+    float minWindowSizeX = style.WindowMinSize.x;
+    float minWindowSizeY = style.WindowMinSize.y;
+    style.WindowMinSize.x = 320.0f;
+    style.WindowMinSize.y = 130.0f;
+
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
       ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
       ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
+    style.WindowMinSize.x = minWindowSizeX;
+    style.WindowMinSize.y = minWindowSizeY;
   }
 
   void EditorPanel::EndDockspace()
   {
     ImGui::End();
+    ImGui::PopStyleVar();
   }
 }

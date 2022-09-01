@@ -28,13 +28,12 @@ namespace Origin {
     void OnGuiRender() override;
 
   private:
-    void VpRefresh();
     void VpGui();
 
     Entity m_SquareEntity;
     Entity m_SquareEntity2;
-    Entity m_CameraEntity;
-    Entity m_CameraEntity2;
+    Entity m_Camera;
+    Entity m_Camera2;
 
     glm::vec4 clearColor = glm::vec4(0.0f, 0.074f, 0.184f, 1.0f);
 

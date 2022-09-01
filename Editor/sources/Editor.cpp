@@ -9,8 +9,6 @@ namespace Origin {
 
 	void Editor::OnAttach()
   {
-    EditorTheme::ApplyRayTek();
-
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
     fbSpec.Height = 720;
@@ -23,8 +21,12 @@ namespace Origin {
     m_SquareEntity2 = m_ActiveScene->CreateEntity("Entity 2");
     m_SquareEntity2.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
 
-    m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-    m_CameraEntity.AddComponent<CameraComponent>();
+    m_Camera = m_ActiveScene->CreateEntity("Camera A");
+    m_Camera.AddComponent<CameraComponent>();
+
+    m_Camera2 = m_ActiveScene->CreateEntity("Camera B");
+    auto& cc = m_Camera2.AddComponent<CameraComponent>();
+    cc.Primary = false;
 
     class EntityController : public ScriptableEntity
     {
@@ -48,8 +50,11 @@ namespace Origin {
 
       void OnCreate()
       {
-        auto& transform = GetComponent<TransformComponent>();
-        transform.Translation.z = 8.0f;
+        auto& translation = GetComponent<TransformComponent>().Translation;
+        translation.x = rand() % 10 - 5.0f;
+
+        translation.z = 8.0f;
+
       }
 
       void OnUpdate(Timestep time)
@@ -71,15 +76,33 @@ namespace Origin {
       }
     };
 
-    m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+    m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+    m_Camera2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
   }
 
   void Editor::OnUpdate(Timestep ts)
   {
-    VpRefresh();
+    if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+      m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
+      (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+    {
+      m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+      m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+    }
+
+    // Render
     Renderer2D::ResetStats();
+    m_Framebuffer->Bind();
+    RenderCommand::Clear();
+    RenderCommand::ClearColor(clearColor);
+
+    // Update scene
     m_ActiveScene->OnUpdate(ts);
+
+    m_Framebuffer->Unbind();
   }
 
   void Editor::OnGuiRender()
@@ -102,24 +125,10 @@ namespace Origin {
     EditorPanel::EndDockspace();
   }
 
-  void Editor::VpRefresh()
-  {
-    if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
-      m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
-      (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
-    {
-      m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
-      m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-    }
-    m_Framebuffer->Bind();
-
-    RenderCommand::ClearColor(clearColor);
-    RenderCommand::Clear();
-  }
-
   void Editor::VpGui()
   {
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar
       | ImGuiWindowFlags_NoScrollWithMouse
       | ImGuiWindowFlags_NoCollapse;
@@ -161,7 +170,7 @@ namespace Origin {
     my = viewportSize.y - my;
 
     mouseX = (int)mx;
-    mouseY = (int)my - 6;
+    mouseY = (int)my - 9;
 
     if (mouseX < 0) mouseX = 0;
     else if (mouseX > (int)viewportSize.x) mouseX = (int)viewportSize.x;
@@ -169,6 +178,8 @@ namespace Origin {
     else if (mouseY > (int)viewportSize.y) mouseY = (int)viewportSize.y;
 
     ImGui::End();
+
+    ImGui::PopStyleVar();
       
   }
 

@@ -11,12 +11,22 @@ namespace Origin {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		ImGuiStyle& style = ImGui::GetStyle();
+
+		ImGui::StyleColorsDark();
+
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Roboto-Medium.ttf", 14);
+
+		style.FramePadding = ImVec2(2, 2);
+		style.WindowBorderSize = 0;
+
 
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		io.ConfigViewportsNoDecoration = true;
 		Application& app = Application::Get();
+
 
 		ImGui_ImplGlfw_InitForOpenGL(app.GetWindow().getWindow(), true);
 		ImGui_ImplOpenGL3_Init("#version 460");

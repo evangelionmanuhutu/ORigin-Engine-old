@@ -38,20 +38,26 @@ namespace Origin
 
 	void SceneCamera::RecalculateProjection()
 	{
-		if (m_ProjectionType == ProjectionType::Perspective)
+		switch (m_ProjectionType)
 		{
-			m_Projection = glm::perspective(m_PerspectiveFOV, m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
-		}
+			case ProjectionType::Perspective:
+			{
+				m_Projection = glm::perspective(m_PerspectiveFOV, m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
+				break;
+			}
 
-		if (m_ProjectionType == ProjectionType::Orthographic)
-		{
-			float OrthoLeft = -m_OrthographicSize * m_AspectRatio * 0.5f;
-			float OrthoRight = m_OrthographicSize * m_AspectRatio * 0.5f;
-			float OrthoTop = -m_OrthographicSize * 0.5f;
-			float OrthoBottom = m_OrthographicSize * 0.5f;
+			case ProjectionType::Orthographic:
+			{
+				float OrthoLeft = -m_OrthographicSize * m_AspectRatio * 0.5f;
+				float OrthoRight = m_OrthographicSize * m_AspectRatio * 0.5f;
+				float OrthoTop = -m_OrthographicSize * 0.5f;
+				float OrthoBottom = m_OrthographicSize * 0.5f;
 
-			m_Projection = glm::ortho(OrthoLeft, OrthoRight, OrthoTop, OrthoBottom,
-				m_OrthographicNear, m_OrthographicFar);
+				m_Projection = glm::ortho(OrthoLeft, OrthoRight, OrthoTop, OrthoBottom,
+					m_OrthographicNear, m_OrthographicFar);
+				break;
+			}
+
 		}
 		
 	}

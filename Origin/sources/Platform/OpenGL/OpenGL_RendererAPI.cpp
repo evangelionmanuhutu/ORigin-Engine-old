@@ -46,10 +46,7 @@ namespace Origin
 	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount)
 	{
 		uint32_t count = IndexCount ? IndexCount : vertexArray->GetIndexBuffer()->GetCount();
-
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 }

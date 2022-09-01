@@ -100,17 +100,17 @@ namespace Origin
 		// frame
 		style->FramePadding.x = 5;
 		style->FramePadding.y = 1;
-		style->FrameRounding = 4.0f;
+		style->FrameRounding = 2.0f;
 
 		// window
 		style->WindowMenuButtonPosition = 0;
 		style->WindowTitleAlign.x = 0.5;
 		style->WindowTitleAlign.y = 0.5;
-		style->WindowPadding = ImVec2(0.0f, 0.0f);
+		style->WindowPadding = ImVec2(6.0f, 6.0f);
 		style->WindowBorderSize = 0;
 		style->ScrollbarSize = 10.0f;
-		style->ScrollbarRounding = 5.0f;
-		style->GrabRounding = 3.0f;
+		style->ScrollbarRounding = 2.0f;
+		style->GrabRounding = 2.0f;
 
 		// Item
 		style->ItemSpacing = ImVec2(5, 5);

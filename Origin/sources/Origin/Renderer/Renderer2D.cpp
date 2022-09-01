@@ -129,6 +129,53 @@ namespace Origin
 		Flush();
 	}
 
+	void Renderer2D::StartBatch()
+	{
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVetexBufferPtr = s_Data.QuadVertexBufferBase;
+		s_Data.TextureSlotIndex = 1;
+	}
+
+	void Renderer2D::NextBatch()
+	{
+		Flush();
+		StartBatch();
+	}
+
+	void Renderer2D::Flush()
+	{
+		if (s_Data.QuadIndexCount == 0)
+			return;
+
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVetexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+		s_Data.vertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
+
+		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+			s_Data.TextureSlots[i]->Bind(i);
+
+		RenderCommand::DrawIndexed(s_Data.vertexArray, s_Data.QuadIndexCount);
+		s_Data.Stats.Draw_Calls++;
+	}
+
+	void Renderer2D::Shutdown()
+	{
+		delete[] s_Data.QuadVertexBufferBase;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// PRIMITIVES
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4 color)
 	{
@@ -409,38 +456,7 @@ namespace Origin
 		return s_Data.Stats;
 	}
 
-	void Renderer2D::Flush()
-	{
-		if (s_Data.QuadIndexCount == 0)
-			return;
-
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVetexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
-		s_Data.vertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
-
-		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
-			s_Data.TextureSlots[i]->Bind(i);
-
-		RenderCommand::DrawIndexed(s_Data.vertexArray, s_Data.QuadIndexCount);
-		s_Data.Stats.Draw_Calls++;
-	}
-
 	
 
-	void Renderer2D::StartBatch()
-	{
-		s_Data.QuadIndexCount = 0;
-		s_Data.QuadVetexBufferPtr = s_Data.QuadVertexBufferBase;
-		s_Data.TextureSlotIndex = 1;
-	}
-
-	void Renderer2D::NextBatch()
-	{
-		Flush();
-		StartBatch();
-	}
-
-	void Renderer2D::Shutdown()
-	{
-		delete[] s_Data.QuadVertexBufferBase;
-	}
+	
 }

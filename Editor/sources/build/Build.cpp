@@ -8,7 +8,7 @@ namespace Origin {
   {
   public:
     EditorBuild() 
-      : Application("Editor", true, false)
+      : Application("Editor", false, false)
     {
       Application::Get().GetWindow().SetIcon("assets/textures/icon_editor.png");
 	    PushLayer(new Editor());
