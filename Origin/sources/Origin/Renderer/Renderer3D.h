@@ -23,20 +23,6 @@ namespace Origin
 		static void Flush();
 
 		static void DrawQuad(const glm::vec3& position = glm::vec3(0.0f), const glm::vec2& scale = glm::vec2(1.0f), const glm::vec4& color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-		static void DrawQuad(const glm::vec2& position = glm::vec2(0.0f), const glm::vec2& scale = glm::vec2(1.0f), const glm::vec4& color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& scale, const std::shared_ptr<Texture2D>& texture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& scale, const std::shared_ptr<Texture2D>& texture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& scale, const std::shared_ptr<SubTexture2D>& subTexture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& scale, const std::shared_ptr<SubTexture2D>& subTexture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-
-		static void DrawRotatedQuad(const glm::vec3& position = glm::vec3(0.0f), float rotation = 0.0f, const glm::vec2& scale = glm::vec2(1.0f), const glm::vec4& color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-		static void DrawRotatedQuad(const glm::vec2& position = glm::vec2(0.0f), float rotation = 0.0f, const glm::vec2& scale = glm::vec2(1.0f), const glm::vec4& color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec2& scale, const std::shared_ptr<Texture2D>& texture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-		static void DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::shared_ptr<Texture2D>& texture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-
-		static void DrawRotatedQuad(const glm::vec3& position, float rotation, const glm::vec2& scale, const std::shared_ptr<SubTexture2D>& subTexture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
-		static void DrawRotatedQuad(const glm::vec2& position, float rotation, const glm::vec2& scale, const std::shared_ptr<SubTexture2D>& subTexture, float textureTiling = 1.0f, const glm::vec4& tintColor = glm::vec4(1.0f));
 
 		struct Statistics
 		{

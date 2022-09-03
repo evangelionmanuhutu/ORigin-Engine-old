@@ -24,10 +24,6 @@ namespace Origin {
     m_Camera = m_ActiveScene->CreateEntity("Camera A");
     m_Camera.AddComponent<CameraComponent>();
 
-    m_Camera2 = m_ActiveScene->CreateEntity("Camera B");
-    auto& cc = m_Camera2.AddComponent<CameraComponent>();
-    cc.Primary = false;
-
     class EntityController : public ScriptableEntity
     {
       void OnCreate()
@@ -51,10 +47,11 @@ namespace Origin {
       void OnCreate()
       {
         auto& translation = GetComponent<TransformComponent>().Translation;
-        translation.x = rand() % 10 - 5.0f;
-
         translation.z = 8.0f;
 
+        auto& camera = GetComponent<CameraComponent>().Camera;
+        float fov = glm::degrees(camera.GetPerspectiveFov());
+        camera.SetPerspectiveFov(glm::radians(70.0F));
       }
 
       void OnUpdate(Timestep time)
@@ -73,12 +70,13 @@ namespace Origin {
           Translation.y += speed * time;
         else if (Input::IsKeyPressed(OGN_KEY_S))
           Translation.y -= speed * time;
+
+        auto& rotation = GetComponent<TransformComponent>().Rotation;
+        //rotation.y += 0.8f * time;
       }
     };
 
     m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-    m_Camera2.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
   }
 

@@ -1,4 +1,4 @@
--- Setting Solution
+-- Solution's Settings
 workspace "ORigin"
     location "../"
     architecture "x64"

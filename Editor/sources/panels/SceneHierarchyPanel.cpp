@@ -270,9 +270,11 @@ namespace Origin
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 		{
 				DrawVec3Control("Translation", component.Translation);
+
 				glm::vec3 rotation = glm::degrees(component.Rotation);
 				DrawVec3Control("Rotation", rotation, 1.0f);
 				component.Rotation = glm::radians(rotation);
+
 				DrawVec3Control("Scale", component.Scale, 0.01f, 1.0f);
 		});
 

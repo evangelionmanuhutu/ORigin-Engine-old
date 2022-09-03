@@ -3,6 +3,7 @@
 #include "RenderCommand.h"
 #include "Origin\Renderer\Renderer2D.h"
 #include "Platform\OpenGL\OpenGL_Shader.h"
+#include "Origin\Scene\Skybox.h"
 
 namespace Origin
 {
@@ -12,6 +13,7 @@ namespace Origin
 	{
 		RenderCommand::Init();
 		Renderer2D::Init();
+		Skybox::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

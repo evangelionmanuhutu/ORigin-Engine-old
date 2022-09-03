@@ -39,10 +39,7 @@ namespace Origin
 		uint32_t TextureSlotIndex = 1;
 
 		glm::vec4 QuadVertexPosition[4];
-
 		Renderer2D::Statistics Stats;
-
-		
 	};
 
 	static Renderer2D_Data s_Data;

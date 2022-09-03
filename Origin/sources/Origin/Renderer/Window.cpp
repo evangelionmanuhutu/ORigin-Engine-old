@@ -62,9 +62,9 @@ namespace Origin {
 			return false;
 		}
 
-		int max_width = GetSystemMetrics(SM_CXSCREEN);
-		int max_hieght = GetSystemMetrics(SM_CYSCREEN);
-		glfwSetWindowMonitor(m_Window, NULL, (max_width / 2) - (m_Data.Width / 2), (max_hieght / 2) - (m_Data.Height / 2), m_Data.Width, m_Data.Height, GLFW_DONT_CARE);
+		//int max_width = GetSystemMetrics(SM_CXSCREEN);
+		//int max_hieght = GetSystemMetrics(SM_CYSCREEN);
+		//glfwSetWindowMonitor(m_Window, NULL, (max_width / 2) - (m_Data.Width / 2), (max_hieght / 2) - (m_Data.Height / 2), m_Data.Width, m_Data.Height, GLFW_DONT_CARE);
 
 		OGN_CORE_INFO("Creating Window {0} ({1}, {2})", m_Data.Title, m_Data.Width, m_Data.Height);
 		glfwMakeContextCurrent(m_Window);

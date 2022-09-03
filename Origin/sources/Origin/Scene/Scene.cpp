@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Component\Component.h"
 #include "Origin\Renderer\Renderer2D.h"
+#include "Origin\Scene\Skybox.h"
 
 #include "ScriptableEntity.h"
 
@@ -13,6 +14,7 @@ namespace Origin {
 
 	Scene::Scene()
 	{
+		
 	}
 
 	Scene::~Scene()
@@ -80,6 +82,10 @@ namespace Origin {
 			}
 
 			Renderer2D::EndScene();
+
+			// Skyboxes
+			Skybox::Draw(*mainCamera, cameraTransform);
+
 		}
 	}
 

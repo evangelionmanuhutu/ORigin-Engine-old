@@ -27,6 +27,10 @@ namespace Origin {
 			Timestep timestep = time - m_LastFrame;
 			m_LastFrame = time;
 
+			//std::string FPS = std::to_string(m_LastFrame / timestep);
+			//std::string newTitle = m_Window->GetTitle() + " " + FPS + " FPS";
+			//glfwSetWindowTitle(m_Window->getWindow(), newTitle.c_str());
+
 			if (!m_Minimized) {
 				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(timestep);
@@ -38,7 +42,6 @@ namespace Origin {
 			m_GuiLayer->End();
 			
 			m_Window->OnUpdate();
-			RenderCommand::Clear();
 		}
 	}
 

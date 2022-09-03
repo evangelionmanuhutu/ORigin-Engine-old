@@ -15,7 +15,7 @@ namespace Origin {
 
 		ImGui::StyleColorsDark();
 
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Roboto-Medium.ttf", 14);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/segoeui.ttf", 16);
 
 		style.FramePadding = ImVec2(2, 2);
 		style.WindowBorderSize = 0;

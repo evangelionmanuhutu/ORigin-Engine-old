@@ -45,6 +45,7 @@ namespace Origin {
 
 		inline uint32_t GetWidth() { return m_Data.Width; }
 		inline uint32_t GetHeight() { return m_Data.Height; }
+		inline std::string GetTitle() { return m_Data.Title; }
 
 		static Window* Create(const std::string& title, bool maximize, bool fullscreen);
 		GLFWwindow* getWindow() { return m_Window; }
