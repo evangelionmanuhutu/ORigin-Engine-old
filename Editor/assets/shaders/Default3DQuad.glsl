@@ -21,6 +21,8 @@ void main()
 in vec3 v_Pos;
 out vec4 color;
 
+uniform sampler2D u_Textures;
+
 void main()
 {
 	color = vec4(v_Pos, 1.0f);

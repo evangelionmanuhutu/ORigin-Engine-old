@@ -4,8 +4,8 @@
 
 namespace Origin
 {
-  struct ShaderProgramSources {
-
+  struct ShaderProgramSources 
+  {
     std::string VertexSources;
     std::string FragmentSources;
   };

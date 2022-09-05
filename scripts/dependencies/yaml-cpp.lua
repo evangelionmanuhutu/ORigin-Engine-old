@@ -16,10 +16,6 @@ project "yaml-cpp"
         "%{wks.location}/Origin/vendor/yaml-cpp/include/"
     }
 
-    defines{
-        "YAMLCPP_USE_STATIC_LIBS"
-    }
-
 	filter "system:windows"
 		systemversion "latest"
 		cppdialect "C++17"

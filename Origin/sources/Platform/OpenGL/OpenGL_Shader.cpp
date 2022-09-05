@@ -256,7 +256,7 @@ namespace Origin {
     int location = glGetUniformLocation(m_RendererID, name.c_str());
     //std::cout << name << " location : " << location << "\n";
     if (location == -1)
-      std::cout << "WARNING: UNIFORM '" << name << "' DOESN'T EXIST!!" << std::endl;
+      OGN_CORE_WARN("{0} : WARNING UNIFORM \"{1}\" does not exists or uninitialized", GetName(), name);
 
     m_UniformLocationCache[name] = location;
     return location;

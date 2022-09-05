@@ -1,0 +1,11 @@
+Scene: Untitled
+Entites:
+  - Entity: 123456784212
+  - Tag Component
+  - Tag: Camera A
+  - Entity: 123456784212
+  - Tag Component
+  - Tag: Entity 2
+  - Entity: 123456784212
+  - Tag Component
+  - Tag: Entity 1

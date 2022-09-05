@@ -5,6 +5,8 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
+#include <Origin\Scene\SceneSerializer.h>
+
 namespace Origin {
 
 	void Editor::OnAttach()
@@ -71,6 +73,10 @@ namespace Origin {
 
     m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+    SceneSerializer serializer(m_ActiveScene);
+    serializer.Serialize("assets/scenes/test.orgproj");
+
   }
 
   void Editor::OnUpdate(Timestep ts)
