@@ -4,7 +4,7 @@ project "Editor"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "on"
+    staticruntime "off"
     links "ORigin"
 
     targetdir (mainOutputdir)
@@ -32,11 +32,13 @@ project "Editor"
         "%{IncludeDir.ENTT}",
         "%{IncludeDir.IMGUI}",
         "%{IncludeDir.GLM}",
+        "%{IncludeDir.YAML_CPP}",
     }
 
     defines {
         "GLFW_INCLUDE_NONE",
-        "_CRT_SECURE_NO_WARNINGS"
+        "_CRT_SECURE_NO_WARNINGS",
+        "YAMLCPP_USE_STATIC_LIBS"
     }
 
     filter "system:windows"

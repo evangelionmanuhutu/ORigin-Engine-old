@@ -7,6 +7,8 @@ namespace Origin
 {
 	struct Skybox_Data
 	{
+		const uint32_t MaxIndices = 36;
+
 		std::shared_ptr<Shader> shader;
 		std::shared_ptr<VertexArray> vertexArray;
 		std::shared_ptr<VertexBuffer> vertexBuffer;
@@ -41,10 +43,10 @@ namespace Origin
 			 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f, //14 [BOTTOM] back right
 			-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, //15 [BOTTOM] back left
 
-			-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, //16 [FRONT] bottom left
-			 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, //17 [FRONT] bottom right
-			 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, //18 [FRONT] top right
-			-1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f, //19 [FRONT] top left
+			-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, //16 [BACK] bottom left
+			 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, //17 [BACK] bottom right
+			 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, //18 [BACK] top right
+			-1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f, //19 [BACK] top left
 
 			-1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, //20 [FRONT] bottom left
 			 1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, //21 [FRONT] bottom right
@@ -63,30 +65,25 @@ namespace Origin
 		s_Data.vertexBuffer->SetLayout(layout);
 		s_Data.vertexArray->AddVertexBuffer(s_Data.vertexBuffer);
 
-		uint32_t indices[]
-		{
-			// Right
-			0, 1, 2,
-			2, 3, 0,
-			// Left
-			4, 5, 6,
-			6, 7, 4,
-			// Top
-			8, 9, 10,
-			10, 11, 8,
-			// Bottom
-			14, 15, 12,
-			12, 13, 14,
-			// Back
-			16, 17, 18,
-			18, 19, 16,
-			// Front
-			20, 21, 22,
-			22, 23, 20,
-		};
+		uint32_t* indices = new uint32_t[s_Data.MaxIndices];
 
-		std::shared_ptr<IndexBuffer> indexBuffer = IndexBuffer::Create(indices, 6 * 6);
+		uint32_t Offset = 0;
+		for (uint32_t i = 0; i < s_Data.MaxIndices; i += 6)
+		{
+			indices[i + 0] = Offset + 0;
+			indices[i + 1] = Offset + 1;
+			indices[i + 2] = Offset + 2;
+
+			indices[i + 3] = Offset + 2;
+			indices[i + 4] = Offset + 3;
+			indices[i + 5] = Offset + 0;
+
+			Offset += 4;
+		}
+
+		std::shared_ptr<IndexBuffer> indexBuffer = IndexBuffer::Create(indices, s_Data.MaxIndices);
 		s_Data.vertexArray->SetIndexBuffer(indexBuffer);
+		delete[] indices;
 
 		LoadTexture();
 		s_Data.shader = Shader::Create("assets/shaders/Skybox.glsl");

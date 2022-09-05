@@ -1,13 +1,13 @@
 ﻿#include "pch.h"
 #include "Scene.h"
+#include "ScriptableEntity.h"
 #include "Component\Component.h"
+
 #include "Origin\Renderer\Renderer2D.h"
+#include "Origin\Renderer\Renderer3D.h"
 #include "Origin\Scene\Skybox.h"
 
-#include "ScriptableEntity.h"
-
 #include <glm\glm.hpp>
-
 #include "Entity.h"
 
 namespace Origin {
@@ -27,6 +27,22 @@ namespace Origin {
 		entity.AddComponent<TransformComponent>();
 		auto& tag = entity.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;
+		return entity;
+	}
+
+	Entity Scene::CreateCamera(const std::string& name)
+	{
+		Entity entity = { m_Registry.create(), this };
+
+		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<CameraComponent>();
+
+		auto& tag = entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+
+		auto& translation = entity.GetComponent<TransformComponent>().Translation;
+		translation.z = 8.0f;
+
 		return entity;
 	}
 
@@ -52,7 +68,6 @@ namespace Origin {
 
 		}
 
-		// Render 2D
 		Camera* mainCamera = nullptr;
 		glm::mat4 cameraTransform;
 
@@ -69,19 +84,37 @@ namespace Origin {
 			}
 		}
 
-		if (mainCamera) {
-
-			Renderer2D::BeginScene(*mainCamera, cameraTransform);
-
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
+		if (mainCamera) 
+		{
 			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				// 2D Scene
+				Renderer2D::BeginScene(*mainCamera, cameraTransform);
 
-				Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+				auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+				for (auto entity : group)
+				{
+					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+				}
+
+				Renderer2D::EndScene();
 			}
 
-			Renderer2D::EndScene();
+			/* {
+				// 3D Scene
+				Renderer3D::BeginScene(*mainCamera, cameraTransform);
+				glm::vec3 translation = glm::vec3(0.0f);
+				float rotation = 0.0f;
+				glm::vec3 scale = glm::vec3(1.0f);
+
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f))
+					* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(1.0f))
+					* glm::scale(glm::mat4(1.0f), scale);
+
+				Renderer3D::DrawQuad(transform, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+
+				Renderer3D::EndScene();
+			}*/
 
 			// Skyboxes
 			Skybox::Draw(*mainCamera, cameraTransform);

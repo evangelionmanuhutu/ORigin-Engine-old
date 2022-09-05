@@ -24,7 +24,11 @@ namespace Origin
 		virtual void ClearColor(float r, float g, float b, float a) = 0;
 		virtual void Clear() = 0;
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount = 0) = 0;
+		virtual void DrawTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount = 0) = 0;
+		virtual void DrawTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count) = 0;
+
+		virtual void DrawLineTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount) = 0;
+		virtual void DrawLineTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count) = 0;
 
 		inline static API GetAPI() { return s_API; }
 

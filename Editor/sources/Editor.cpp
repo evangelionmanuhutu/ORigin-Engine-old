@@ -48,10 +48,6 @@ namespace Origin {
       {
         auto& translation = GetComponent<TransformComponent>().Translation;
         translation.z = 8.0f;
-
-        auto& camera = GetComponent<CameraComponent>().Camera;
-        float fov = glm::degrees(camera.GetPerspectiveFov());
-        camera.SetPerspectiveFov(glm::radians(70.0F));
       }
 
       void OnUpdate(Timestep time)
@@ -70,9 +66,6 @@ namespace Origin {
           Translation.y += speed * time;
         else if (Input::IsKeyPressed(OGN_KEY_S))
           Translation.y -= speed * time;
-
-        auto& rotation = GetComponent<TransformComponent>().Rotation;
-        //rotation.y += 0.8f * time;
       }
     };
 

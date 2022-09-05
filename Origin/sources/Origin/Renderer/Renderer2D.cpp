@@ -28,7 +28,7 @@ namespace Origin
 		std::shared_ptr<VertexArray> vertexArray;
 		std::shared_ptr<VertexBuffer> vertexBuffer;
 
-		std::shared_ptr<Shader> shader;
+		std::shared_ptr<Shader> QuadShader;
 		std::shared_ptr<Texture2D> WhiteTexture;
 
 		uint32_t QuadIndexCount = 0;
@@ -93,9 +93,9 @@ namespace Origin
 		for (uint32_t i = 0; i < s_Data.MaxTextureSlots; i++)
 			samplers[i] = i;
 
-		s_Data.shader = Shader::Create("assets/shaders/TexturedShader.glsl");
-		s_Data.shader->Bind();
-		s_Data.shader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+		s_Data.QuadShader = Shader::Create("assets/shaders/Default2D.glsl");
+		s_Data.QuadShader->Bind();
+		s_Data.QuadShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
 		s_Data.QuadVertexPosition[0] = glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f);
 		s_Data.QuadVertexPosition[1] = glm::vec4( 0.5f, -0.5f, 0.0f, 1.0f);
@@ -105,8 +105,8 @@ namespace Origin
 
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
 	{
-		s_Data.shader->Bind();
-		s_Data.shader->SetMatrix("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data.QuadShader->Bind();
+		s_Data.QuadShader->SetMatrix("u_ViewProjection", camera.GetViewProjectionMatrix());
 
 		StartBatch();
 	}
@@ -115,8 +115,8 @@ namespace Origin
 	{
 		glm::mat4 viewProjection = camera.GetProjection() * glm::inverse(transform);
 
-		s_Data.shader->Bind();
-		s_Data.shader->SetMatrix("u_ViewProjection", viewProjection);
+		s_Data.QuadShader->Bind();
+		s_Data.QuadShader->SetMatrix("u_ViewProjection", viewProjection);
 
 		StartBatch();
 	}
@@ -144,31 +144,24 @@ namespace Origin
 		if (s_Data.QuadIndexCount == 0)
 			return;
 
-		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVetexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
-		s_Data.vertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
+		// Quads
+		{
+			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVetexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+			s_Data.vertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
 
-		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
-			s_Data.TextureSlots[i]->Bind(i);
+			for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+				s_Data.TextureSlots[i]->Bind(i);
 
-		RenderCommand::DrawIndexed(s_Data.vertexArray, s_Data.QuadIndexCount);
-		s_Data.Stats.Draw_Calls++;
+			RenderCommand::DrawTriIndexed(s_Data.vertexArray, s_Data.QuadIndexCount);
+			s_Data.Stats.Draw_Calls++; s_Data.QuadShader->Unbind();
+		}
+		
 	}
 
 	void Renderer2D::Shutdown()
 	{
 		delete[] s_Data.QuadVertexBufferBase;
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

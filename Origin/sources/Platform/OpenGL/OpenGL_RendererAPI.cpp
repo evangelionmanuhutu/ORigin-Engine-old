@@ -43,11 +43,30 @@ namespace Origin
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLRendererAPI::DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount)
+	void OpenGLRendererAPI::DrawTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount)
 	{
 		vertexArray->Bind();
 		uint32_t count = IndexCount ? IndexCount : vertexArray->GetIndexBuffer()->GetCount();
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLRendererAPI::DrawTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count)
+	{
+		vertexArray->Bind();
+		glDrawArrays(GL_TRIANGLES, 0, count);
+	}
+
+	void OpenGLRendererAPI::DrawLineTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount)
+	{
+		vertexArray->Bind();
+		uint32_t count = IndexCount ? IndexCount : vertexArray->GetIndexBuffer()->GetCount();
+		glDrawElements(GL_LINE, count, GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLRendererAPI::DrawLineTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count)
+	{
+		vertexArray->Bind();
+		glDrawArrays(GL_LINE, 0, count);
 	}
 
 }

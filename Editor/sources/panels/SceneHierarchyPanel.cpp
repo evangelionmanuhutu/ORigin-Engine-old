@@ -42,8 +42,14 @@ namespace Origin
 		// create entity
 		if (ImGui::BeginPopupContextWindow(0, 1, false))
 		{
-			if(ImGui::MenuItem("Create Entity"))
-				m_Context->CreateEntity("Empty Entity");
+			if(ImGui::MenuItem("Create Empty Entity"))
+				m_Context->CreateEntity();
+
+			if (ImGui::MenuItem("Create Camera"))
+				m_Context->CreateCamera("Camera");
+
+			//if (ImGui::MenuItem("Create Plane"))
+			//	m_Context->CreateEntity();
 
 			ImGui::EndPopup();
 		}
@@ -64,7 +70,10 @@ namespace Origin
 		// create entity
 		if (ImGui::BeginPopupContextWindow(0, 1, false))
 		{
-			if (ImGui::MenuItem("Add Component"));
+			if (ImGui::MenuItem("Add Component"))
+			{
+
+			}
 
 			ImGui::EndPopup();
 		}
@@ -246,7 +255,7 @@ namespace Origin
 				}
 			}
 
-			if (!entity.HasComponent<CameraComponent>() /*&& !entity.HasComponent<SpriteRendererComponent>()*/) {
+			if (!entity.HasComponent<CameraComponent>()) {
 				if (ImGui::MenuItem("Camera") && !entity.HasComponent<CameraComponent>())
 				{
 					m_SelectionContext.AddComponent<CameraComponent>();

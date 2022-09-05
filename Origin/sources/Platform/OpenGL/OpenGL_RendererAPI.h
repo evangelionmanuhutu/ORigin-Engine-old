@@ -14,6 +14,10 @@ namespace Origin
 
 		virtual void Clear() override;
 
-		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount = 0) override;
+		virtual void DrawTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount = 0) override;
+		virtual void DrawTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t Count = 0) override;
+
+		virtual void DrawLineTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount) override;
+		virtual void DrawLineTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count) override;
 	};
 }

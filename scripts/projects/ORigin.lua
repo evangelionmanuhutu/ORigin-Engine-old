@@ -4,7 +4,7 @@ project "ORigin"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "on"
+    staticruntime "off"
 
     targetdir (mainOutputdir)
     objdir (intermediateOutputdir)
@@ -30,18 +30,21 @@ project "ORigin"
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.ENTT}",
+         "%{IncludeDir.YAML_CPP}",
     }
 
     links {
         "glfw",
         "glad",
         "ImGui",
+        "yaml-cpp",
         "opengl32.lib"
     }
 
     defines {
         "GLFW_INCLUDE_NONE",
-        "_CRT_SECURE_NO_WARNINGS"
+        "_CRT_SECURE_NO_WARNINGS",
+        "YAMLCPP_USE_STATIC_LIBS"
     }
 
     filter "system:windows"

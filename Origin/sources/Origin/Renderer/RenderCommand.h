@@ -32,9 +32,24 @@ namespace Origin
 			s_RendererAPI->Clear();
 		}
 
-		inline static void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount = 0)
+		inline static void DrawTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount = 0)
 		{
-			s_RendererAPI->DrawIndexed(vertexArray, IndexCount);
+			s_RendererAPI->DrawTriIndexed(vertexArray, IndexCount);
+		}
+
+		inline static void DrawTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count)
+		{
+			s_RendererAPI->DrawTriArrays(vertexArray, count);
+		}
+
+		inline static void DrawLineTriIndexed(const std::shared_ptr<VertexArray>& vertexArray, uint32_t IndexCount = 0)
+		{
+			s_RendererAPI->DrawLineTriIndexed(vertexArray, IndexCount);
+		}
+
+		inline static void DrawLineTriArrays(const std::shared_ptr<VertexArray>& vertexArray, uint32_t count)
+		{
+			s_RendererAPI->DrawLineTriArrays(vertexArray, count);
 		}
 
 	private:

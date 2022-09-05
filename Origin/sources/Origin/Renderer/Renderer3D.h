@@ -3,7 +3,6 @@
 #include "Origin\Renderer\Buffer.h"
 #include "Origin\Renderer\Shader.h"
 #include "Origin\Renderer\Texture.h"
-#include "Origin\Renderer\SubTexture2D.h"
 
 #include "Origin\Scene\Component\Camera.h"
 
@@ -19,10 +18,13 @@ namespace Origin
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const Camera& camera, glm::mat4& transform);
 		static void EndScene();
 		static void Flush();
 
-		static void DrawQuad(const glm::vec3& position = glm::vec3(0.0f), const glm::vec2& scale = glm::vec2(1.0f), const glm::vec4& color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4 color);
+		static void DrawPlane(const glm::mat4& transform, glm::vec2& tillingFactor);
+		static void DrawSkybox();
 
 		struct Statistics
 		{

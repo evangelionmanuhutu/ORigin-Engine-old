@@ -3,7 +3,7 @@ project "glfw"
     location (vendorProjectFiles)
 	kind "StaticLib"
 	language "C"
-	staticruntime "On"
+	staticruntime "off"
 
     targetdir (mainOutputdir)
     objdir (intermediateOutputdir)

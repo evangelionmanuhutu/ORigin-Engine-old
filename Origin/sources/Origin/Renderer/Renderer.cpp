@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "RenderCommand.h"
 #include "Origin\Renderer\Renderer2D.h"
+#include "Origin\Renderer\Renderer3D.h"
 #include "Platform\OpenGL\OpenGL_Shader.h"
 #include "Origin\Scene\Skybox.h"
 
@@ -13,6 +14,7 @@ namespace Origin
 	{
 		RenderCommand::Init();
 		Renderer2D::Init();
+		Renderer3D::Init();
 		Skybox::Init();
 	}
 
@@ -41,7 +43,7 @@ namespace Origin
 		vertexArray->Bind();
 		vertexArray->GetIndexBuffer()->Bind();
 
-		RenderCommand::DrawIndexed(vertexArray);
+		RenderCommand::DrawTriIndexed(vertexArray);
 	}
 
 	void Renderer::EndScene()

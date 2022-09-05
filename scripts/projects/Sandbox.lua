@@ -5,7 +5,7 @@ project "Sandbox2D"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "on"
+    staticruntime "off"
     links "ORigin"
 
     targetdir (mainOutputdir)
@@ -35,11 +35,13 @@ project "Sandbox2D"
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.ENTT}",
+        "%{IncludeDir.YAML_CPP}",
     }
 
     defines {
-        "GLFW_INCLUDE_NONE",
-        "_CRT_SECURE_NO_WARNINGS"
+       "GLFW_INCLUDE_NONE",
+        "_CRT_SECURE_NO_WARNINGS",
+        "YAMLCPP_USE_STATIC_LIBS"
     }
 
     filter "system:windows"
