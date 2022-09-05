@@ -16,6 +16,3 @@
 [submodule "Origin/vendor/stbi"]
 	path = Origin/vendor/stbi
 	url = https://github.com/kaks-ev/stb_image.git
-[submodule "Origin/vendor/yaml-cpp"]
-	path = Origin/vendor/yaml-cpp
-	url = https://github.com/kaks-ev/yaml-cpp.git
