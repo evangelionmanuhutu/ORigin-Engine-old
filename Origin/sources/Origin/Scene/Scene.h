@@ -13,6 +13,7 @@ namespace Origin
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity CreateSpriteEntity(const std::string& name = std::string());
 		Entity CreateCamera(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 

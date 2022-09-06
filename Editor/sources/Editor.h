@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <Origin.h>
-#include "panels/EditorPanel.h"
+#include "panels\EditorPanel.h"
 #include "panels\SceneHierarchyPanel.h"
 
 namespace Origin {
@@ -15,27 +15,30 @@ namespace Origin {
     void OnAttach() override;
     void OnUpdate(Timestep ts) override;
 
-    void OnEvent(Event& e) override
-  	{
-      EventDispatcher dispatcher(e);
-      dispatcher.Dispatch<MouseMovedEvent>(OGN_BIND_EVENT_FN(Editor::OnMouseMovedEvent));
-      dispatcher.Dispatch<WindowResizeEvent>(OGN_BIND_EVENT_FN(Editor::OnWindowResize));
-    }
+    void OnEvent(Event& e) override;
+
+    void ViewportRefresh();
 
     bool OnWindowResize(WindowResizeEvent& e);
     bool OnMouseMovedEvent(MouseMovedEvent& e);
+    bool OnKeyPressed(KeyPressedEvent& e);
 
     void OnGuiRender() override;
 
+    void NewScene();
+    void SaveAs();
+    void OpenScene();
+
   private:
     void VpGui();
+    void MenuBar();
 
     Entity m_SquareEntity;
     Entity m_SquareEntity2;
     Entity m_Camera;
     Entity m_Camera2;
 
-    glm::vec4 clearColor = glm::vec4(0.0f, 0.074f, 0.184f, 1.0f);
+    glm::vec4 clearColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
 
     glm::vec4 color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
     glm::vec2 position = glm::vec2(0);
@@ -49,6 +52,7 @@ namespace Origin {
     std::shared_ptr<Framebuffer> m_Framebuffer;
     std::shared_ptr<Scene> m_ActiveScene;
     SceneHierarchyPanel m_SceneHierarchyPanel;
+
     int mouseX;
     int mouseY;
   };

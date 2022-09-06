@@ -5,8 +5,9 @@ namespace Origin {
 
 	class EditorPanel
 	{
+	private:
+
 	public:
-		static void MenuBar();
 		static void BeginDockspace();
 		static void EndDockspace();
 	};

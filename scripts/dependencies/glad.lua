@@ -2,6 +2,7 @@ project "glad"
     location (vendorProjectFiles)
     kind "StaticLib"
 	language "C"
+    staticruntime "off"
 
     targetdir (mainOutputdir)
     objdir (intermediateOutputdir)

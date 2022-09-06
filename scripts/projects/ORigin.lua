@@ -42,9 +42,9 @@ project "ORigin"
     }
 
     defines {
+        "YAMLCPP_USE_STATIC_LIBS",
         "GLFW_INCLUDE_NONE",
-        "_CRT_SECURE_NO_WARNINGS",
-        "YAMLCPP_USE_STATIC_LIBS"
+        "_CRT_SECURE_NO_WARNINGS"
     }
 
     filter "system:windows"

@@ -2,6 +2,7 @@ project "ImGui"
     location (vendorProjectFiles)
     kind "StaticLib"
     language "C++"
+    staticruntime "off"
 
     targetdir (mainOutputdir)
     objdir (intermediateOutputdir)
@@ -31,13 +32,6 @@ project "ImGui"
     filter "system:windows"
 		systemversion "latest"
 		cppdialect "C++17"
-		staticruntime "off"
-
-	filter "system:linux"
-		pic "On"
-		systemversion "latest"
-		cppdialect "C++17"
-		staticruntime "off"
 
 	filter "configurations:Debug"
 		runtime "Debug"

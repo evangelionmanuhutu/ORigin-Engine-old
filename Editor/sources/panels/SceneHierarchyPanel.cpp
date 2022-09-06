@@ -21,6 +21,7 @@ namespace Origin
 	void SceneHierarchyPanel::SetContext(const std::shared_ptr<Scene>& context)
 	{
 		m_Context = context;
+		m_SelectionContext = {};
 	}
 
 	void SceneHierarchyPanel::OnImGuiRender()
@@ -44,6 +45,9 @@ namespace Origin
 		{
 			if(ImGui::MenuItem("Create Empty Entity"))
 				m_Context->CreateEntity();
+
+			if (ImGui::MenuItem("Create Sprite Entity"))
+				m_Context->CreateSpriteEntity();
 
 			if (ImGui::MenuItem("Create Camera"))
 				m_Context->CreateCamera("Camera");

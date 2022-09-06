@@ -9,6 +9,7 @@ namespace Origin
 	public:
 		SceneHierarchyPanel() = default;
 		SceneHierarchyPanel(const std::shared_ptr<Scene>& context);
+
 		void SetContext(const std::shared_ptr<Scene>& context);
 		void OnImGuiRender();
 	private:

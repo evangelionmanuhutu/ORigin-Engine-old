@@ -30,6 +30,19 @@ namespace Origin {
 		return entity;
 	}
 
+	Entity Scene::CreateSpriteEntity(const std::string& name)
+	{
+		Entity entity = { m_Registry.create(), this };
+
+		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<SpriteRendererComponent>();
+
+		auto& tag = entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+
+		return entity;
+	}
+
 	Entity Scene::CreateCamera(const std::string& name)
 	{
 		Entity entity = { m_Registry.create(), this };

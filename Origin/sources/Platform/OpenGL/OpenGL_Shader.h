@@ -23,21 +23,11 @@ namespace Origin
 
     virtual const std::string& GetName() const override {  return m_Name; }
 
-    virtual std::string GetFile() const override {
-      std::string source = (m_Filepath + "\n" +
+    virtual std::string GetFile() const override {  std::string source = (m_Filepath + "\n" +
         "\nVertex\n" + m_ShaderSource.VertexSources +
-        "Fragment\n" + m_ShaderSource.FragmentSources); 
-      return source; }
-
-  private:
-    std::string m_Filepath;
-    unsigned int m_RendererID;
-    std::unordered_map<std::string, int> m_UniformLocationCache;
-    ShaderProgramSources m_ShaderSource;
-    std::string m_Name;
+        "Fragment\n" + m_ShaderSource.FragmentSources); return source; }
 
   public:
-
 		// BOOLEAN UNIFORM
 		virtual void SetBool(const std::string& name, bool boolean) override;
 
@@ -90,6 +80,13 @@ namespace Origin
     // MATRIX UNIFORM
     void SetUniformMatrix(const std::string& name, const glm::mat3& MATRIX);
     void SetUniformMatrix(const std::string& name, const glm::mat4& MATRIX);
+
+  private:
+    std::string m_Filepath;
+    unsigned int m_RendererID;
+    std::unordered_map<std::string, int> m_UniformLocationCache;
+    ShaderProgramSources m_ShaderSource;
+    std::string m_Name;
 
   private:
     ShaderProgramSources ParseShader(const std::string& filePath);

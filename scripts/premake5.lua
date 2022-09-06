@@ -10,7 +10,6 @@ workspace "ORigin"
     }
 
     flags {
-
 		"MultiProcessorCompile"
 	}
 

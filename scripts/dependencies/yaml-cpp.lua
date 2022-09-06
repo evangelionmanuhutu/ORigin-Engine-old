@@ -2,6 +2,7 @@ project "yaml-cpp"
     location (vendorProjectFiles)
 	kind "StaticLib"
 	language "C++"
+	staticruntime "Off"
 
 	targetdir (mainOutputdir)
     objdir (intermediateOutputdir)
@@ -12,6 +13,10 @@ project "yaml-cpp"
         "%{wks.location}/Origin/vendor/yaml-cpp/include/yaml-cpp/**.h",
     }
 
+	defines {
+        "YAMLCPP_USE_STATIC_LIBS"
+    }
+
     includedirs {
         "%{wks.location}/Origin/vendor/yaml-cpp/include/"
     }
@@ -19,13 +24,11 @@ project "yaml-cpp"
 	filter "system:windows"
 		systemversion "latest"
 		cppdialect "C++17"
-		staticruntime "off"
 
 	filter "system:linux"
 		pic "On"
 		systemversion "latest"
 		cppdialect "C++17"
-		staticruntime "off"
 
 	filter "configurations:Debug"
 		runtime "Debug"

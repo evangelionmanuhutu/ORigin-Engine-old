@@ -75,7 +75,7 @@ namespace Origin {
     glGetShaderiv(id, GL_COMPILE_STATUS, &success);
     if (!success) {
       glGetShaderInfoLog(id, 512, NULL, infoLog);
-      std::cout << infoLog << "failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader" << std::endl;
+      OGN_CORE_WARN("Failed to Compile \"{0}\" Shader Location: {1}", type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT", m_Filepath);
 
       glDeleteShader(id);
       return 0;
@@ -256,7 +256,7 @@ namespace Origin {
     int location = glGetUniformLocation(m_RendererID, name.c_str());
     //std::cout << name << " location : " << location << "\n";
     if (location == -1)
-      OGN_CORE_WARN("{0} : WARNING UNIFORM \"{1}\" does not exists or uninitialized", GetName(), name);
+      OGN_CORE_WARN("{0} : WARNING UNIFORM \"{1}\" does not exists or uninitialized", m_Name, name);
 
     m_UniformLocationCache[name] = location;
     return location;
