@@ -16,3 +16,6 @@
 [submodule "Origin/vendor/stbi"]
 	path = Origin/vendor/stbi
 	url = https://github.com/kaks-ev/stb_image.git
+[submodule "Origin/vendor/ImGuizmo"]
+	path = Origin/vendor/ImGuizmo
+	url = https://github.com/kaks-ev/ImGuizmo.git
