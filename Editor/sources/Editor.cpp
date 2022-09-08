@@ -8,10 +8,14 @@
 
 #include "Origin\Scene\SceneSerializer.h"
 
+#include <ImGuizmo.h>
+
 namespace Origin {
 
 	void Editor::OnAttach()
   {
+    EditorTheme::ApplyDarkPurple();
+
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
     fbSpec.Height = 720;
@@ -77,7 +81,6 @@ namespace Origin {
 
     m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
-
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
   }
 
@@ -102,7 +105,7 @@ namespace Origin {
       case Key::S:
       {
         if (control && shift)
-          SaveAs();
+          SaveSceneAs();
         break;
       }
 
@@ -117,22 +120,24 @@ namespace Origin {
       {
         if (control)
           NewScene();
-          break;
+        break;
       }
     }
-    return false;
+
+    return true;
   }
 
   void Editor::OnUpdate(Timestep ts)
   {
+    ViewportRefresh();
+
     Renderer2D::ResetStats();
     m_Framebuffer->Bind();
     RenderCommand::Clear();
     RenderCommand::ClearColor(clearColor);
 
-    ViewportRefresh();
-
     m_ActiveScene->OnUpdate(ts);
+
     m_Framebuffer->Unbind();
   }
 
@@ -143,17 +148,6 @@ namespace Origin {
     MenuBar();
 
     m_SceneHierarchyPanel.OnImGuiRender();
-
-    ImGui::Begin("Debug Info");
-    ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    ImGui::Text("OpenGL Version : (%s)", glGetString(GL_VERSION));
-    ImGui::Text("ImGui version : (%s)", IMGUI_VERSION);
-    ImGui::Separator();
-    ImGui::Text("Mouse Position (%d, %d)", mouseX, mouseY);
-    ImGui::ColorEdit4("Background", glm::value_ptr(clearColor));
-
-    ImGui::End();
-
     EditorPanel::EndDockspace();
   }
 
@@ -164,7 +158,7 @@ namespace Origin {
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
   }
 
-  void Editor::SaveAs()
+  void Editor::SaveSceneAs()
   {
     std::string filepath = FileDialogs::SaveFile("ORigin Scene (*.origin)\0*.origin\0");
     if (!filepath.empty())
@@ -206,19 +200,13 @@ namespace Origin {
       if (ImGui::BeginMenu("File"))
       {
         if (ImGui::MenuItem("New", "Ctrl + N"))
-        {
            NewScene();
-        }
 
         if (ImGui::MenuItem("Open", "Ctrl+O"))
-        {
           OpenScene();
-        }
 
         if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
-        {
-          SaveAs();
-        }
+          SaveSceneAs();
 
         if (ImGui::MenuItem("Exit")) window.Close();
 
@@ -237,7 +225,7 @@ namespace Origin {
     }
     if (guiRenderStatus)
     {
-      ImGui::Begin("Render Status");
+      ImGui::Begin("Render Status", &guiRenderStatus);
       auto stats = Renderer2D::GetStats();
       ImGui::Text("Renderer2D Status");
       ImGui::Text("Draw Calls: %d", stats.Draw_Calls);
@@ -253,6 +241,23 @@ namespace Origin {
       ImGui::ShowStyleEditor();
       ImGui::End();
     }
+
+    if (guiDebugInfo)
+    {
+      ImGui::Begin("Debug Info", &guiDebugInfo);
+      ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+      ImGui::Text("OpenGL Version : (%s)", glGetString(GL_VERSION));
+      ImGui::Text("ImGui version : (%s)", IMGUI_VERSION);
+      ImGui::Separator();
+      ImGui::Text("Mouse Position (%d, %d)", mouseX, mouseY);
+      ImGui::End();
+    }
+
+    if (guiImGuiDemoWindow)
+    {
+      ImGui::ShowDemoWindow(&guiImGuiDemoWindow);
+    }
+
   }
 
   void Editor::VpGui()
@@ -268,6 +273,7 @@ namespace Origin {
 
     ImGui::SetNextWindowClass(&window_class);
     ImGui::Begin("Viewport", nullptr, window_flags);
+   
 
     auto viewportOffset = ImGui::GetCursorPos();
 
@@ -307,8 +313,39 @@ namespace Origin {
     if (mouseY < 0) mouseY = 0;
     else if (mouseY > (int)viewportSize.y) mouseY = (int)viewportSize.y;
 
-    ImGui::End();
+    // ImGuizmo
+    Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+    if (selectedEntity)
+    {
+      ImGuizmo::SetOrthographic(false);
+      ImGuizmo::SetDrawlist();
+      float windowWidth = ImGui::GetWindowWidth();
+      float windowHeight = ImGui::GetWindowHeight();
 
+      ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+      // Camera
+      auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+      const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+      const glm::mat4& cameraProjection = camera.GetProjection();
+      glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+      auto& tc = selectedEntity.GetComponent<TransformComponent>();
+      glm::mat4 transform = tc.GetTransform();
+
+      ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+        ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform));
+
+      if (ImGuizmo::IsUsing())
+      {
+        tc.Translation = glm::vec3(transform[3]);
+      }
+    }
+
+
+
+
+    ImGui::End();
     ImGui::PopStyleVar();
       
   }
@@ -319,19 +356,26 @@ namespace Origin {
       m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
       (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
     {
-      m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
       m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+      m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
     }
   }
 
   bool Editor::OnWindowResize(WindowResizeEvent& e)
   {
+    //OGN_CORE_TRACE("{0}, {1}", e.getWidth(), e.getHeight());
     return false;
   }
 
   bool Editor::OnMouseMovedEvent(MouseMovedEvent& e)
   {
+    //OGN_CORE_TRACE("{0}, {1}", e.GetX(), e.GetY());
+    return false;
+  }
+
+  bool Editor::OnMouseButtonEvent(MouseButtonEvent& e)
+  {
+    //OGN_CORE_TRACE("{0}", e.GetMouseButton());
     return false;
   }
 }

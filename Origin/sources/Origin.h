@@ -3,7 +3,7 @@
 
 #include "Origin\IO\Input.h"
 #include "Origin\IO\KeyCodes.h"
-#include "Origin\IO\MouseButtonCodes.h"
+#include "Origin\IO\MouseCodes.h"
 
 #include "Origin\IO\Events\Event.h"
 #include "Origin\IO\Events\KeyEvent.h"

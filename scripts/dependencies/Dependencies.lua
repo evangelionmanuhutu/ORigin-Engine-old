@@ -3,6 +3,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "%{wks.location}/Origin/vendor/glfw/include"
 IncludeDir["GLAD"] = "%{wks.location}/Origin/vendor/glad/include"
 IncludeDir["IMGUI"] = "%{wks.location}/Origin/vendor/imgui"
+IncludeDir["IMGUIZMO"] = "%{wks.location}/Origin/vendor/ImGuizmo"
 IncludeDir["STBI"] = "%{wks.location}/Origin/vendor/stbi"
 IncludeDir["SPDLOG"] = "%{wks.location}/Origin/vendor/spdlog/include"
 IncludeDir["GLM"] = "%{wks.location}/Origin/vendor/glm"

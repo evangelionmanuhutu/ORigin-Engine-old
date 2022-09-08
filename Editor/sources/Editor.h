@@ -21,15 +21,16 @@ namespace Origin {
 
     bool OnWindowResize(WindowResizeEvent& e);
     bool OnMouseMovedEvent(MouseMovedEvent& e);
+    bool OnMouseButtonEvent(MouseButtonEvent& e);
     bool OnKeyPressed(KeyPressedEvent& e);
 
     void OnGuiRender() override;
 
+  private:
     void NewScene();
-    void SaveAs();
+    void SaveSceneAs();
     void OpenScene();
 
-  private:
     void VpGui();
     void MenuBar();
 

@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "CameraController.h"
+
 #include "Origin\IO\Input.h"
 #include "Origin\IO\KeyCodes.h"
-#include "Origin/IO/MouseButtonCodes.h"
+#include "Origin\IO\MouseCodes.h"
+
 #include "Origin\Core\OriginCore.h"
 
 namespace Origin
@@ -19,54 +21,54 @@ namespace Origin
 		float moveSpeed = 1.0f;
 
 		if (m_EditorMode) {
-			if (Input::IsKeyPressed(OGN_KEY_A) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+			if (Input::IsKeyPressed(Key::A) && Input::IsMouseButtonPressed(Mouse::ButtonRight))
 				m_CameraPosition.x -= m_CameraTranslationSpeed * time;
-			else if (Input::IsKeyPressed(OGN_KEY_D) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+			else if (Input::IsKeyPressed(Key::D) && Input::IsMouseButtonPressed(Mouse::ButtonRight))
 				m_CameraPosition.x += m_CameraTranslationSpeed * time;
-			if (Input::IsKeyPressed(OGN_KEY_S) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+			if (Input::IsKeyPressed(Key::S) && Input::IsMouseButtonPressed(Mouse::ButtonRight))
 				m_CameraPosition.y -= m_CameraTranslationSpeed * time;
-			else if (Input::IsKeyPressed(OGN_KEY_W) && Input::IsMouseButtonPressed(OGN_MOUSE_BUTTON_RIGHT))
+			else if (Input::IsKeyPressed(Key::W) && Input::IsMouseButtonPressed(Mouse::ButtonRight))
 				m_CameraPosition.y += m_CameraTranslationSpeed * time;
 
 			if (!m_IsRotate) {
-				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT))
+				if (Input::IsKeyPressed(Key::LeftShift))
 					moveSpeed = 3.0f;
 			}
 
 			if (m_IsRotate) {
-				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_A))
+				if (Input::IsKeyPressed(Key::LeftShift) && Input::IsKeyPressed(Key::A))
 					m_CameraRotation -= m_CameraRotationSpeed * time;
 
-				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_D))
+				if (Input::IsKeyPressed(Key::LeftShift) && Input::IsKeyPressed(Key::D))
 					m_CameraRotation += m_CameraRotationSpeed * time;
 			}
 		}
 		else {
-			if (Input::IsKeyPressed(OGN_KEY_A))
+			if (Input::IsKeyPressed(Key::A))
 				m_CameraPosition.x -= m_CameraTranslationSpeed * time;
-			else if (Input::IsKeyPressed(OGN_KEY_D))
+			else if (Input::IsKeyPressed(Key::D))
 				m_CameraPosition.x += m_CameraTranslationSpeed * time;
-			if (Input::IsKeyPressed(OGN_KEY_S))
+			if (Input::IsKeyPressed(Key::S))
 				m_CameraPosition.y -= m_CameraTranslationSpeed * time;
-			else if (Input::IsKeyPressed(OGN_KEY_W))
+			else if (Input::IsKeyPressed(Key::W))
 				m_CameraPosition.y += m_CameraTranslationSpeed * time;
 
 			if (!m_IsRotate) {
-				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT))
+				if (Input::IsKeyPressed(Key::LeftShift))
 					moveSpeed = 3.0f;
 			}
 
 			if (m_IsRotate) {
-				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_A))
+				if (Input::IsKeyPressed(Key::LeftShift) && Input::IsKeyPressed(Key::A))
 					m_CameraRotation -= m_CameraRotationSpeed * time;
 
-				if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT) && Input::IsKeyPressed(OGN_KEY_D))
+				if (Input::IsKeyPressed(Key::LeftShift) && Input::IsKeyPressed(Key::D))
 					m_CameraRotation += m_CameraRotationSpeed * time;
 			}
 		}
 
 		// reset position
-		if (Input::IsKeyPressed(OGN_KEY_LEFT_CONTROL) && Input::IsKeyPressed(OGN_KEY_R)) {
+		if (Input::IsKeyPressed(Key::LeftControl) && Input::IsKeyPressed(Key::R)) {
 			m_CameraPosition = glm::vec3(0);
 			m_CameraRotation = 0.0f;
 		}
@@ -95,7 +97,7 @@ namespace Origin
 
 	bool OrthoCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_ZoomLevel -= e.GetYoffset() * 0.25f;
+		m_ZoomLevel -= e.GetYOffset() * 0.25f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;

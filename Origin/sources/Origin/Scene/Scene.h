@@ -15,6 +15,9 @@ namespace Origin
 		Entity CreateEntity(const std::string& name = std::string());
 		Entity CreateSpriteEntity(const std::string& name = std::string());
 		Entity CreateCamera(const std::string& name = std::string());
+
+		Entity GetPrimaryCameraEntity();
+
 		void DestroyEntity(Entity entity);
 
 		void OnUpdate(Timestep time);

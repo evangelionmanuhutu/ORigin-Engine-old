@@ -32,6 +32,7 @@ project "Sandbox2D"
         "%{IncludeDir.STBI}",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.IMGUI}",
+        "%{IncludeDir.IMGUIZMO}",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.ENTT}",
@@ -68,7 +69,7 @@ project "Sandbox3D"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"
-    staticruntime "on"
+    staticruntime "off"
     links "ORigin"
 
     targetdir (mainOutputdir)
@@ -95,6 +96,7 @@ project "Sandbox3D"
         "%{IncludeDir.STBI}",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.IMGUI}",
+        "%{IncludeDir.IMGUIZMO}",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.ENTT}",

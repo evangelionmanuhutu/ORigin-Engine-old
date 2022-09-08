@@ -31,6 +31,7 @@ project "Editor"
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.ENTT}",
         "%{IncludeDir.IMGUI}",
+        "%{IncludeDir.IMGUIZMO}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.YAML_CPP}",
     }

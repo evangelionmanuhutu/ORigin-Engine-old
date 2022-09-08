@@ -19,6 +19,8 @@ project "ORigin"
 	  "%{wks.location}/readme.md",
       "%{IncludeDir.STBI}/**.cpp",
       "%{IncludeDir.STBI}/**.h",
+      "%{IncludeDir.IMGUIZMO}/ImGuizmo.cpp",
+      "%{IncludeDir.IMGUIZMO}/ImGuizmo.h",
 	}
 
     includedirs {
@@ -27,12 +29,18 @@ project "ORigin"
         "%{IncludeDir.STBI}",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.IMGUI}",
+        "%{IncludeDir.IMGUIZMO}",
         "%{IncludeDir.GLAD}",
         "%{IncludeDir.GLM}",
         "%{IncludeDir.ENTT}",
          "%{IncludeDir.YAML_CPP}",
     }
 
+    defines {
+        "GLFW_INCLUDE_NONE",
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+    
     links {
         "glfw",
         "glad",
@@ -41,11 +49,10 @@ project "ORigin"
         "opengl32.lib"
     }
 
-    defines {
-        "YAMLCPP_USE_STATIC_LIBS",
-        "GLFW_INCLUDE_NONE",
-        "_CRT_SECURE_NO_WARNINGS"
-    }
+    filter "files:../../Origin/vendor/ImGuizmo/**.cpp"
+    flags { "NoPCH" }
+
+    
 
     filter "system:windows"
         systemversion "latest"

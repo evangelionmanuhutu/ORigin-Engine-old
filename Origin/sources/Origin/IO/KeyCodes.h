@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 namespace Origin
 {
 	using KeyCode = uint16_t;

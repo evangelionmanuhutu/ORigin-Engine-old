@@ -27,6 +27,7 @@ void main()
 
 //type fragment
 #version 460 core
+
 in vec2 v_TexCoord;
 in vec4 v_Color;
 in float v_TexIndex;
@@ -39,6 +40,7 @@ out vec4 color;
 void main()
 {
 	vec4 texColor = v_Color;
+
 	switch(int(v_TexIndex))
 	{
 		case 0: color = v_Color; break;
@@ -74,5 +76,8 @@ void main()
 		case 30: texColor *= texture(u_Textures[30], v_TexCoord * v_TilingFactor); break;
 		case 31: texColor *= texture(u_Textures[31], v_TexCoord * v_TilingFactor); break;
 	}
+
+	if (texColor.a == 0.0f) discard;
+
 	color = texColor;
 }

@@ -10,6 +10,7 @@ namespace Origin
 		SceneHierarchyPanel() = default;
 		SceneHierarchyPanel(const std::shared_ptr<Scene>& context);
 
+		Entity GetSelectedEntity() const { return m_SelectionContext; }
 		void SetContext(const std::shared_ptr<Scene>& context);
 		void OnImGuiRender();
 	private:

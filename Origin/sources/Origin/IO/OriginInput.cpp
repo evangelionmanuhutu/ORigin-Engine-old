@@ -4,38 +4,36 @@
 
 namespace Origin
 {
-	bool Input::IsKeyPressed(int keycode)
+	bool Input::IsKeyPressed(const KeyCode keycode)
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().getWindow());
-		int state = glfwGetKey(window, keycode);
+		int state = glfwGetKey(window, static_cast<int32_t>(keycode));
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool Input::IsMouseButtonPressed(int button)
+	bool Input::IsMouseButtonPressed(const MouseCode button)
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().getWindow());
-		int state = glfwGetMouseButton(window, button);
-		return state == GLFW_PRESS || state == GLFW_REPEAT;
+		int state = glfwGetMouseButton(window, static_cast<int32_t>(button));
+		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float>Input::GetMousePosition()
+	glm::vec2 Input::GetMousePosition()
 	{
 		GLFWwindow* window = static_cast<GLFWwindow*>(Application::Get().GetWindow().getWindow());
-		double xPos, yPos;
-		glfwGetCursorPos(window, &xPos, &yPos);
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
 
-		return { (float)xPos, float(yPos) };
+		return { (float)xpos, (float)ypos };
 	}
 
 	float Input::GetMouseX()
 	{
-		auto v = GetMousePosition();
-		return std::get<0>(v);
+		return GetMousePosition().x;
 	}
 
 	float Input::GetMouseY()
 	{
-		auto v = GetMousePosition();
-		return std::get<0>(v);
+		return GetMousePosition().y;
 	}
 }

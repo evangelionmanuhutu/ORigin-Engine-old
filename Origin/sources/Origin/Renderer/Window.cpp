@@ -3,6 +3,8 @@
 #include "Icon.h"
 #include "Origin\Utils\log.h"
 
+#include "Origin\IO\KeyCodes.h"
+
 #include "Origin\IO\Events\KeyEvent.h"
 #include "Origin\IO\Events\MouseEvent.h"
 #include "Origin\IO\Events\AppEvent.h"
@@ -36,7 +38,6 @@ namespace Origin {
 
 	bool Window::init()
 	{
-		// WINDOW CONFIGURATION
 		if (!glfwInit()) {
 			OGN_CORE_ERROR("ERROR :FAILED TO INITIALIZE GLFW");
 			return false;
@@ -61,10 +62,6 @@ namespace Origin {
 			glfwTerminate();
 			return false;
 		}
-
-		//int max_width = GetSystemMetrics(SM_CXSCREEN);
-		//int max_hieght = GetSystemMetrics(SM_CYSCREEN);
-		//glfwSetWindowMonitor(m_Window, NULL, (max_width / 2) - (m_Data.Width / 2), (max_hieght / 2) - (m_Data.Height / 2), m_Data.Width, m_Data.Height, GLFW_DONT_CARE);
 
 		OGN_CORE_INFO("Creating Window {0} ({1}, {2})", m_Data.Title, m_Data.Width, m_Data.Height);
 		glfwMakeContextCurrent(m_Window);
@@ -95,15 +92,15 @@ namespace Origin {
 				data.Width = width;
 				data.Height = height;
 
-				WindowResizeEvent e(width, height);
-				data.EventCallback(e);
+				WindowResizeEvent event(width, height);
+				data.EventCallback(event);
 			});
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				WindowCloseEvent e;
-				data.EventCallback(e);
+				WindowCloseEvent event;
+				data.EventCallback(event);
 			});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -112,26 +109,26 @@ namespace Origin {
 
 				switch (action)
 				{
-				case GLFW_PRESS:
-				{
-					KeyPressedEvent e(key, 0);
-					data.EventCallback(e);
-					break;
-				}
+					case GLFW_PRESS:
+					{
+						KeyPressedEvent event(key, 0);
+						data.EventCallback(event);
+						break;
+					}
 
-				case GLFW_RELEASE:
-				{
-					KeyReleasedEvent e(key);
-					data.EventCallback(e);
-					break;
-				}
+					case GLFW_RELEASE:
+					{
+						KeyReleasedEvent event(key);
+						data.EventCallback(event);
+						break;
+					}
 
-				case GLFW_REPEAT:
-				{
-					KeyPressedEvent e(key, 1);
-					data.EventCallback(e);
-					break;
-				}
+					case GLFW_REPEAT:
+					{
+						KeyPressedEvent event(key, 1);
+						data.EventCallback(event);
+						break;
+					}
 				}
 			});
 
@@ -139,8 +136,8 @@ namespace Origin {
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				KeyTypedEvent e(keycode);
-				data.EventCallback(e);
+				KeyTypedEvent event(keycode);
+				data.EventCallback(event);
 			});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
@@ -149,33 +146,33 @@ namespace Origin {
 
 				switch (action)
 				{
-				case GLFW_PRESS:
-				{
-					MouseButtonPressedEvent e(button);
-					data.EventCallback(e);
-					break;
-				}
-				case GLFW_RELEASE:
-				{
-					MouseButtonReleasedEvent e(button);
-					data.EventCallback(e);
-					break;
-				}
+					case GLFW_PRESS:
+					{
+						MouseButtonPressedEvent event(button);
+						data.EventCallback(event);
+						break;
+					}
+					case GLFW_RELEASE:
+					{
+						MouseButtonReleasedEvent event(button);
+						data.EventCallback(event);
+						break;
+					}
 				}
 			});
 
 		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				MouseScrolledEvent e((float)xOffset, (float)yOffset);
-				data.EventCallback(e);
+				MouseScrolledEvent event((float)xOffset, (float)yOffset);
+				data.EventCallback(event);
 			});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				MouseMovedEvent e((float)xPos, (float)yPos);
-				data.EventCallback(e);
+				MouseMovedEvent event((float)xPos, (float)yPos);
+				data.EventCallback(event);
 			});
 	}
 

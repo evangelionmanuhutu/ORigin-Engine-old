@@ -154,6 +154,7 @@ namespace Origin
 
 	void Skybox::Draw(const Camera& camera, glm::mat4& transform)
 	{
+		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		s_Data.shader->Bind();
 		s_Data.vertexArray->Bind();
@@ -168,6 +169,7 @@ namespace Origin
 		s_Data.vertexArray->Unbind();
 		s_Data.shader->Unbind();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		glDepthFunc(GL_LESS);
+
+		glDisable(GL_DEPTH_TEST);
 	}
 }

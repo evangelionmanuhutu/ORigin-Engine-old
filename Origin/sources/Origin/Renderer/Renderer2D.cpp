@@ -155,7 +155,6 @@ namespace Origin
 			RenderCommand::DrawTriIndexed(s_Data.vertexArray, s_Data.QuadIndexCount);
 			s_Data.Stats.Draw_Calls++; s_Data.QuadShader->Unbind();
 		}
-		
 	}
 
 	void Renderer2D::Shutdown()
@@ -267,7 +266,7 @@ namespace Origin
 
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
 		{
-			if (*s_Data.TextureSlots[i].get() == *texture.get())
+			if (*s_Data.TextureSlots[i] == *texture)
 			{
 				textureIndex = (float)i;
 				break;
@@ -348,7 +347,7 @@ namespace Origin
 
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
 		{
-			if (*s_Data.TextureSlots[i].get() == *texture.get())
+			if (*s_Data.TextureSlots[i] == *texture)
 			{
 				textureIndex = (float)i;
 				break;
@@ -397,7 +396,7 @@ namespace Origin
 
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
 		{
-			if (*s_Data.TextureSlots[i].get() == *texture.get())
+			if (*s_Data.TextureSlots[i] == *texture)
 			{
 				textureIndex = (float)i;
 				break;

@@ -32,8 +32,8 @@ namespace Origin
     ImGuiStyle& style = ImGui::GetStyle();
     float minWindowSizeX = style.WindowMinSize.x;
     float minWindowSizeY = style.WindowMinSize.y;
-    style.WindowMinSize.x = 320.0f;
-    style.WindowMinSize.y = 130.0f;
+    style.WindowMinSize.x = 300.0f;
+    style.WindowMinSize.y = 120.0f;
 
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {

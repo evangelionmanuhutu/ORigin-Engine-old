@@ -4,6 +4,13 @@
 #include "Origin\Core\OriginCore.h"
 #include "Origin\Core\Application.h"
 
+#include <imgui.h>
+#include <backends\imgui_impl_glfw.h>
+#include <backends\imgui_impl_opengl3.h>
+
+#include <ImGuizmo.h>
+
+
 namespace Origin {
 
 	void GuiLayer::OnAttach()
@@ -13,7 +20,7 @@ namespace Origin {
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImGuiStyle& style = ImGui::GetStyle();
 
-		ImGui::StyleColorsDark();
+		ImGui::StyleColorsLight();
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/segoeui.ttf", 16);
 
@@ -49,6 +56,7 @@ namespace Origin {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void GuiLayer::End()
@@ -79,8 +87,8 @@ namespace Origin {
 
 	void GuiLayer::OnEvent(Event& e)
 	{
-		ImGuiIO& io = ImGui::GetIO();
-		e.Handled |= e.isInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-		e.Handled |= e.isInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		//ImGuiIO& io = ImGui::GetIO();
+		//e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+		//e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
 	}
 }
