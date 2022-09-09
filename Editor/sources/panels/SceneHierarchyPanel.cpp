@@ -43,17 +43,19 @@ namespace Origin
 		// create entity
 		if (ImGui::BeginPopupContextWindow(0, 1, false))
 		{
-			if(ImGui::MenuItem("Create Empty Entity"))
-				m_Context->CreateEntity();
+			if (ImGui::BeginMenu("Create"))
+			{
+				if (ImGui::MenuItem("Empty"))
+					m_Context->CreateEntity();
 
-			if (ImGui::MenuItem("Create Sprite Entity"))
-				m_Context->CreateSpriteEntity();
+				if (ImGui::MenuItem("2D Sprite"))
+					m_Context->CreateSpriteEntity();
 
-			if (ImGui::MenuItem("Create Camera"))
-				m_Context->CreateCamera("Camera");
+				if (ImGui::MenuItem("Camera"))
+					m_Context->CreateCamera("Camera");
 
-			//if (ImGui::MenuItem("Create Plane"))
-			//	m_Context->CreateEntity();
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndPopup();
 		}

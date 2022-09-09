@@ -6,6 +6,7 @@
 #include "Origin\Renderer\SubTexture2D.h"
 
 #include "Origin\Scene\Component\Camera.h"
+#include "Origin\Scene\EditorCamera.h"
 
 #include "glm\glm.hpp"
 
@@ -18,6 +19,7 @@ namespace Origin
 		static void Shutdown();
 
 		static void BeginScene(const Camera& camera, glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const OrthoCamera& camera);
 
 		static void EndScene();

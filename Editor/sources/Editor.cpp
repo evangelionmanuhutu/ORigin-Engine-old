@@ -20,72 +20,17 @@ namespace Origin {
     fbSpec.Width = 1280;
     fbSpec.Height = 720;
     m_Framebuffer = Framebuffer::Create(fbSpec);
+    
     m_ActiveScene = std::make_shared<Scene>();
+    m_EditorCamera = EditorCamera(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
-#if 0
-    m_SquareEntity = m_ActiveScene->CreateEntity("Entity 1");
-    m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-
-    m_SquareEntity2 = m_ActiveScene->CreateEntity("Entity 2");
-    m_SquareEntity2.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-    m_Camera = m_ActiveScene->CreateEntity("Camera A");
-    m_Camera.AddComponent<CameraComponent>();
-    auto& transform = m_Camera.GetComponent<TransformComponent>();
-    transform.Translation.z = 8.0f;
-
-    class EntityController : public ScriptableEntity
-    {
-      void OnCreate()
-      {
-        auto& transform = GetComponent<TransformComponent>();
-        transform.Translation.x = 2.0f;
-      }
-
-      void OnUpdate(Timestep time)
-      {
-      }
-    };
-
-    m_SquareEntity2.AddComponent<NativeScriptComponent>().Bind<EntityController>();
-
-
-    class CameraController : public ScriptableEntity
-    {
-    public:
-
-      void OnCreate()
-      {
-        auto& translation = GetComponent<TransformComponent>().Translation;
-        translation.z = 8.0f;
-      }
-
-      void OnUpdate(Timestep time)
-      {
-        auto& Translation = GetComponent<TransformComponent>().Translation;
-
-        float speed = 5.0f;
-        if (Input::IsKeyPressed(OGN_KEY_LEFT_SHIFT)) 
-          speed = 10.0f;
-
-        if (Input::IsKeyPressed(OGN_KEY_A)) 
-          Translation.x -= speed * time;
-        else if (Input::IsKeyPressed(OGN_KEY_D))
-          Translation.x += speed * time;
-        if (Input::IsKeyPressed(OGN_KEY_W))
-          Translation.y += speed * time;
-        else if (Input::IsKeyPressed(OGN_KEY_S))
-          Translation.y -= speed * time;
-      }
-    };
-
-    m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-#endif
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
   }
 
   void Editor::OnEvent(Event& e)
   {
+    m_EditorCamera.OnEvent(e);
     EventDispatcher dispatcher(e);
     dispatcher.Dispatch<MouseMovedEvent>(OGN_BIND_EVENT_FN(Editor::OnMouseMovedEvent));
     dispatcher.Dispatch<WindowResizeEvent>(OGN_BIND_EVENT_FN(Editor::OnWindowResize));
@@ -102,10 +47,14 @@ namespace Origin {
 
     switch (e.GetKeyCode())
     {
+      // File Operation
       case Key::S:
       {
         if (control && shift)
           SaveSceneAs();
+
+        m_GizmosType = ImGuizmo::OPERATION::SCALE;
+
         break;
       }
 
@@ -122,21 +71,35 @@ namespace Origin {
           NewScene();
         break;
       }
+
+      case Key::T:
+      {
+        m_GizmosType = ImGuizmo::OPERATION::TRANSLATE;
+        break;
+      }
+
+      case Key::R:
+      {
+        m_GizmosType = ImGuizmo::OPERATION::ROTATE;
+        break;
+      }
     }
 
     return true;
   }
 
-  void Editor::OnUpdate(Timestep ts)
+  void Editor::OnUpdate(Timestep time)
   {
     ViewportRefresh();
+
+    m_EditorCamera.OnUpdate(time);
 
     Renderer2D::ResetStats();
     m_Framebuffer->Bind();
     RenderCommand::Clear();
     RenderCommand::ClearColor(clearColor);
 
-    m_ActiveScene->OnUpdate(ts);
+    m_ActiveScene->OnUpdateEditor(time, m_EditorCamera);
 
     m_Framebuffer->Unbind();
   }
@@ -155,6 +118,7 @@ namespace Origin {
   {
     m_ActiveScene = std::make_shared<Scene>();
     m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+    m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
     m_SceneHierarchyPanel.SetContext(m_ActiveScene);
   }
 
@@ -175,6 +139,7 @@ namespace Origin {
     {
       m_ActiveScene = std::make_shared<Scene>();
       m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+      m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
       m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 
       SceneSerializer serializer(m_ActiveScene);
@@ -277,10 +242,26 @@ namespace Origin {
 
     auto viewportOffset = ImGui::GetCursorPos();
 
+    ImGuiIO& io = ImGui::GetIO();
     if (ImGui::IsWindowHovered())
     {
-      ImGuiIO& io = ImGui::GetIO();
       io.WantCaptureMouse = false;
+      m_EditorCamera.ViewportHovered = true;
+    }
+    else
+    {
+      io.WantCaptureMouse = true;
+      m_EditorCamera.ViewportHovered = false;
+    }
+
+    if (ImGui::IsWindowFocused())
+    {
+      m_EditorCamera.ViewportActive = true;
+    }
+    else
+    {
+      io.WantCaptureMouse = true;
+      m_EditorCamera.ViewportActive = false;
     }
 
     ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
@@ -313,9 +294,8 @@ namespace Origin {
     if (mouseY < 0) mouseY = 0;
     else if (mouseY > (int)viewportSize.y) mouseY = (int)viewportSize.y;
 
-    // ImGuizmo
     Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
-    if (selectedEntity)
+    if (selectedEntity && m_GizmosType != -1)
     {
       ImGuizmo::SetOrthographic(false);
       ImGuizmo::SetDrawlist();
@@ -324,26 +304,50 @@ namespace Origin {
 
       ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-      // Camera
-      auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+      // Runtime Camera from Entity
+      /*auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
       const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
       const glm::mat4& cameraProjection = camera.GetProjection();
-      glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+      glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
+
+      // Editor Camera
+      const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+      glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
       auto& tc = selectedEntity.GetComponent<TransformComponent>();
       glm::mat4 transform = tc.GetTransform();
+      glm::vec3 originalRotation = tc.Rotation;
+
+      bool snap = Input::IsKeyPressed(Key::LeftShift);
+      float snapValue = 0.5f;
+
+      if (snap && m_GizmosType == ImGuizmo::OPERATION::ROTATE)
+        snapValue = 45.0f;
+
+      float snapValues[3] = { snapValue, snapValue, snapValue };
 
       ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-        ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(transform));
+        (ImGuizmo::OPERATION)m_GizmosType, ImGuizmo::LOCAL, glm::value_ptr(transform), 0, snap ? snapValues : nullptr);
 
       if (ImGuizmo::IsUsing())
       {
-        tc.Translation = glm::vec3(transform[3]);
+        m_EditorCamera.MovementActive = false;
+        glm::vec3 translation, rotation, scale;
+        Math::DecomposeTransform(transform, translation, rotation, scale);
+
+        tc.Translation = translation;
+        glm::vec3 deltaRotation = rotation - tc.Rotation;
+        tc.Rotation += deltaRotation;
+        tc.Scale = scale;
       }
+      else
+      {
+        m_EditorCamera.MovementActive = true;
+      }
+
+      if (Input::IsKeyPressed(Key::Escape)) m_GizmosType = -1;
     }
-
-
-
+    else if(!selectedEntity) m_GizmosType = -1;
 
     ImGui::End();
     ImGui::PopStyleVar();
@@ -357,6 +361,7 @@ namespace Origin {
       (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
     {
       m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+      m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
       m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
     }
   }

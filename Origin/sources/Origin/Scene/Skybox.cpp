@@ -152,9 +152,26 @@ namespace Origin
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 	}
 
+	void Skybox::Draw(const EditorCamera& camera)
+	{
+		glDepthFunc(GL_LEQUAL);
+		s_Data.shader->Bind();
+		s_Data.vertexArray->Bind();
+
+		s_Data.shader->SetMatrix("u_ViewProjection", camera.GetViewProjection());
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, s_Data.RendererID);
+
+		glDrawElements(GL_TRIANGLES, s_Data.vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, 0);
+
+		s_Data.vertexArray->Unbind();
+		s_Data.shader->Unbind();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		glDepthFunc(GL_LESS);
+	}
+
 	void Skybox::Draw(const Camera& camera, glm::mat4& transform)
 	{
-		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		s_Data.shader->Bind();
 		s_Data.vertexArray->Bind();
@@ -169,7 +186,6 @@ namespace Origin
 		s_Data.vertexArray->Unbind();
 		s_Data.shader->Unbind();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-
-		glDisable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LESS);
 	}
 }

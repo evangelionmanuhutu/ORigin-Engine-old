@@ -34,13 +34,7 @@ namespace Origin {
     void VpGui();
     void MenuBar();
 
-    Entity m_SquareEntity;
-    Entity m_SquareEntity2;
-    Entity m_Camera;
-    Entity m_Camera2;
-
     glm::vec4 clearColor = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
-
     glm::vec4 color = glm::vec4(1.0f, 0.0f, 1.0f, 1.0f);
     glm::vec2 position = glm::vec2(0);
     glm::vec2 scale = glm::vec2(1);
@@ -53,6 +47,8 @@ namespace Origin {
     std::shared_ptr<Framebuffer> m_Framebuffer;
     std::shared_ptr<Scene> m_ActiveScene;
     SceneHierarchyPanel m_SceneHierarchyPanel;
+    EditorCamera m_EditorCamera;
+    int m_GizmosType = -1;
 
     int mouseX;
     int mouseY;

@@ -121,6 +121,14 @@ namespace Origin
 		StartBatch();
 	}
 
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
+		s_Data.QuadShader->Bind();
+		s_Data.QuadShader->SetMatrix("u_ViewProjection", camera.GetViewProjection());
+
+		StartBatch();
+	}
+
 	void Renderer2D::EndScene()
 	{
 		Flush();

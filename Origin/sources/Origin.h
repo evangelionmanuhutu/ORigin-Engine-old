@@ -1,6 +1,8 @@
 #pragma once
 #include "Origin\Core\Application.h"
 
+#include "Origin\Math\Math.h"
+
 #include "Origin\IO\Input.h"
 #include "Origin\IO\KeyCodes.h"
 #include "Origin\IO\MouseCodes.h"
@@ -23,6 +25,7 @@
 #include "Origin\Scene\Entity.h"
 #include "Origin\Scene\ScriptableEntity.h"
 #include "Origin\Scene\Scene.h"
+#include "Origin\Scene\EditorCamera.h"
 #include "Origin\Scene\Component\Component.h"
 #include "Origin\Scene\Component\Camera.h"
 #include "Origin\Scene\Component\CameraController.h"

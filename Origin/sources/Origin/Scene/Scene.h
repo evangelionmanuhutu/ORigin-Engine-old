@@ -2,6 +2,8 @@
 #include "entt\entt.hpp"
 #include "Origin\Utils\Time.h"
 
+#include "EditorCamera.h"
+
 namespace Origin
 {
 	class Entity;
@@ -20,7 +22,9 @@ namespace Origin
 
 		void DestroyEntity(Entity entity);
 
-		void OnUpdate(Timestep time);
+		void OnUpdateRuntime(Timestep time);
+		void OnUpdateEditor(Timestep time, EditorCamera& camera);
+
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 	private:

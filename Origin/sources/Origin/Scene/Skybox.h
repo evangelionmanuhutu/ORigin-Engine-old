@@ -4,6 +4,7 @@
 #include "Origin\Renderer\VertexArray.h"
 #include "Origin\Renderer\Buffer.h"
 #include "Origin\Scene\Component\Camera.h"
+#include "Origin\Scene\EditorCamera.h"
 
 namespace Origin
 {
@@ -12,6 +13,7 @@ namespace Origin
 	public:
 		static void Init();
 		static void LoadTexture();
+		static void Draw(const EditorCamera& camera);
 		static void Draw(const Camera& camera, glm::mat4& transform);
 	};
 
