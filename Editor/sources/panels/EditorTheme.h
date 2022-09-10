@@ -10,6 +10,7 @@ namespace Origin {
 	public:
 		static void ApplyDarkPurple();
 		static void ApplyRayTek();
+		static void ApplyOriginTheme(bool bStyleDark_, float alpha_);
 
 		static void SetColors(int backGroundColor, int textColor, int mainColor, int mainAccentColor, int highlightColor);
 

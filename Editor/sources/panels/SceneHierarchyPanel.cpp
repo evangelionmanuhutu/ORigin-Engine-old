@@ -40,6 +40,7 @@ namespace Origin
 			m_SelectionContext = {};
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
+
 		// create entity
 		if (ImGui::BeginPopupContextWindow(0, 1, false))
 		{
@@ -56,9 +57,9 @@ namespace Origin
 
 				ImGui::EndMenu();
 			}
-
 			ImGui::EndPopup();
 		}
+
 		ImGui::PopStyleVar();
 
 		ImGui::End(); // !Hierarchy

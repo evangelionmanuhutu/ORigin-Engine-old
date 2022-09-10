@@ -14,7 +14,7 @@ namespace Origin {
 
 	void Editor::OnAttach()
   {
-    EditorTheme::ApplyDarkPurple();
+    EditorTheme::ApplyOriginTheme(true, 1.0f);
 
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
@@ -50,31 +50,31 @@ namespace Origin {
       // File Operation
       case Key::S:
       {
-        if (control && shift)
-          SaveSceneAs();
-
-        m_GizmosType = ImGuizmo::OPERATION::SCALE;
-
+        if (control && shift) SaveSceneAs();
         break;
       }
 
       case Key::O:
       {
-        if (control)
-          OpenScene();
+        if (control) OpenScene();
         break;
       }
 
       case Key::N:
       {
-        if (control)
-          NewScene();
+        if (control) NewScene();
         break;
       }
 
       case Key::T:
       {
         m_GizmosType = ImGuizmo::OPERATION::TRANSLATE;
+        break;
+      }
+
+      case Key::E:
+      {
+        m_GizmosType = ImGuizmo::OPERATION::SCALE;
         break;
       }
 

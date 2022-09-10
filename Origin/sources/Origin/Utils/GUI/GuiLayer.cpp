@@ -20,7 +20,7 @@ namespace Origin {
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImGuiStyle& style = ImGui::GetStyle();
 
-		ImGui::StyleColorsLight();
+		//ImGui::StyleColorsLight();
 
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/segoeui.ttf", 16);
 

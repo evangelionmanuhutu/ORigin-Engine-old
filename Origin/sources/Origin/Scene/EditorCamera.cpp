@@ -55,22 +55,23 @@ namespace Origin
 		return speed;
 	}
 
-	void EditorCamera::OnUpdate(Timestep ts)
+	void EditorCamera::OnUpdate(Timestep time)
 	{
 		const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 		glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
 		m_InitialMousePosition = mouse;
-		if (ViewportActive && MovementActive)
+
+		if (MovementActive)
 		{
 			if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))
 				MousePan(delta);
-			else if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
+			else if (Input::IsMouseButtonPressed(Mouse::ButtonRight) && !Input::IsKeyPressed(Key::LeftShift))
 				MouseRotate(delta);
-			else if (Input::IsMouseButtonPressed(Mouse::ButtonLeft) && !Input::IsKeyPressed(Key::LeftShift))
-				MouseRotate(delta);
-			else if (Input::IsKeyPressed(Key::LeftShift) && Input::IsMouseButtonPressed(Mouse::ButtonLeft))
+			else if (Input::IsMouseButtonPressed(Mouse::ButtonRight) && Input::IsKeyPressed(Key::LeftShift))
 				MouseZoom(delta.y);
 		}
+
+		OnKeyControll(time);
 
 		UpdateView();
 	}
@@ -91,6 +92,44 @@ namespace Origin
 
 		UpdateView();
 		return false;
+	}
+
+	void EditorCamera::OnKeyControll(float time)
+	{
+		
+		if (ViewportActive && MovementActive && Input::IsMouseButtonPressed(Mouse::ButtonRight))
+		{
+			float delta = 2.0f * time;
+			auto [xSpeed, ySpeed] = PanSpeed();
+
+			if (Input::IsKeyPressed(Key::W))
+			{
+				m_Distance -= delta * ZoomSpeed();
+			}
+
+			else if (Input::IsKeyPressed(Key::S))
+			{
+				m_Distance += delta * ZoomSpeed();
+			}
+
+			if (Input::IsKeyPressed(Key::A))
+			{
+				m_FocalPoint -= GetRightDirection() * delta * ZoomSpeed() * m_Distance;
+			}
+
+			else if (Input::IsKeyPressed(Key::D))
+			{
+				m_FocalPoint += GetRightDirection() * delta * ZoomSpeed() * m_Distance;
+			}
+		}
+
+		if (m_Distance < 1.0f)
+		{
+			m_FocalPoint += GetForwardDirection();
+			m_Distance = 1.0f;
+		}
+
+		UpdateView();
 	}
 
 	void EditorCamera::MousePan(const glm::vec2& delta)

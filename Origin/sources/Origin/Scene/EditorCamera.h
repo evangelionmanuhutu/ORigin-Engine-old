@@ -2,6 +2,8 @@
 
 #include "Origin\IO\Events\Event.h"
 #include "Origin\IO\Events\MouseEvent.h"
+#include "Origin\IO\Events\KeyEvent.h"
+
 #include "Origin\Scene\Component\Camera.h"
 #include "Origin\Utils\Time.h"
 
@@ -19,8 +21,8 @@ namespace Origin
 		EditorCamera() = default;
 		EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
-		void OnUpdate(Timestep ts);
-		void OnEvent(Event& e);
+		void OnUpdate(Timestep time);
+		void OnEvent(Event& event);
 
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }
@@ -47,7 +49,8 @@ namespace Origin
 		void UpdateProjection();
 		void UpdateView();
 
-		bool OnMouseScroll(MouseScrolledEvent& e);
+		bool OnMouseScroll(MouseScrolledEvent& event);
+		void OnKeyControll(float time);
 
 		void MousePan(const glm::vec2& delta);
 		void MouseRotate(const glm::vec2& delta);
