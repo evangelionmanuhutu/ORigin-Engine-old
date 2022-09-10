@@ -14,7 +14,7 @@ namespace Origin {
 
 	void Editor::OnAttach()
   {
-    EditorTheme::ApplyOriginTheme(true, 1.0f);
+    EditorTheme::ApplyDarkPurple();
 
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;

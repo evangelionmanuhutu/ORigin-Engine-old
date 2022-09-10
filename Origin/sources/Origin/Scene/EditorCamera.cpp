@@ -48,10 +48,11 @@ namespace Origin
 
 	float EditorCamera::ZoomSpeed() const
 	{
-		float distance = m_Distance * 0.2f;
+		float distance = m_Distance * 0.15f;
 		distance = std::max(distance, 0.0f);
+		distance = std::min(distance, 100.0f);
 		float speed = distance * distance;
-		speed = std::min(speed, 100.0f); // max speed = 100
+		speed = std::min(speed, 80.0f); // max speed = 100
 		return speed;
 	}
 
@@ -114,20 +115,16 @@ namespace Origin
 
 			if (Input::IsKeyPressed(Key::A))
 			{
-				m_FocalPoint -= GetRightDirection() * delta * ZoomSpeed() * m_Distance;
+				m_FocalPoint -= GetRightDirection() * delta * xSpeed * m_Distance;
 			}
 
 			else if (Input::IsKeyPressed(Key::D))
 			{
-				m_FocalPoint += GetRightDirection() * delta * ZoomSpeed() * m_Distance;
+				m_FocalPoint += GetRightDirection() * delta * xSpeed *  m_Distance;
 			}
 		}
 
-		if (m_Distance < 1.0f)
-		{
-			m_FocalPoint += GetForwardDirection();
-			m_Distance = 1.0f;
-		}
+		OGN_CORE_TRACE("{}", m_Distance);
 
 		UpdateView();
 	}
