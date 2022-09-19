@@ -154,7 +154,7 @@ namespace Origin
 
 	void Skybox::Draw(const EditorCamera& camera)
 	{
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_LESS);
 		s_Data.shader->Bind();
 		s_Data.vertexArray->Bind();
 

@@ -15,7 +15,6 @@ namespace Origin
 		RenderCommand::Init();
 		Renderer2D::Init();
 		Renderer3D::Init();
-		Skybox::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

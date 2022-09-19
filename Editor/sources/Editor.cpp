@@ -162,6 +162,8 @@ namespace Origin {
 
     if (ImGui::BeginMenuBar())
     {
+      ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+
       if (ImGui::BeginMenu("File"))
       {
         if (ImGui::MenuItem("New", "Ctrl + N"))
@@ -187,6 +189,7 @@ namespace Origin {
         ImGui::EndMenu();
       }
       ImGui::EndMenuBar();
+      ImGui::PopStyleColor();
     }
     if (guiRenderStatus)
     {

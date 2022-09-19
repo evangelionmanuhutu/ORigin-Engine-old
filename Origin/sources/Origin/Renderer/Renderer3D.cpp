@@ -4,133 +4,42 @@
 #include "RenderCommand.h"
 
 #include "Platform\OpenGL\OpenGL_Shader.h"
+#include "stb_image.h"
 
 #include <glm\gtc\matrix_transform.hpp>
 
+
 namespace Origin
 {
-	struct QuadVertex
-	{
-		glm::vec3 Position;
-		glm::vec4 Color;
-	};
 
 	struct Renderer3D_Data
 	{
-		// Renderer3D Stuff
-		Renderer3D::Statistics Stats;
-
-		// Quads
-		const uint32_t MaxQuads = 10000;
-		const uint32_t MaxVertices = MaxQuads * 4;
-		const uint32_t MaxIndices = MaxQuads * 6;
-		static const uint32_t MaxTextureSlots = 32;
-
-		uint32_t QuadIndexCount = 0;
-		QuadVertex* QuadVertexBufferBase = nullptr;
-		QuadVertex* QuadVetexBufferPtr = nullptr;
-
-		std::shared_ptr<VertexArray> vertexArray;
-		std::shared_ptr<VertexBuffer> vertexBuffer;
-
-		std::shared_ptr<Shader> quadShader;
-		std::shared_ptr<Texture2D> WhiteTexture;
-		std::array<std::shared_ptr<Texture2D>, MaxTextureSlots> TextureSlots;
-		uint32_t TextureSlotIndex = 1;
-		glm::vec4 QuadVertexPosition[24];
+		// Skybox Data
+		std::shared_ptr<Shader> skyShader;
+		std::shared_ptr<VertexArray> skyVA;
+		std::shared_ptr<VertexBuffer> skyVB;
+		uint32_t skyTextureID;
 	};
 
-	static Renderer3D_Data s_3D_Data;
+	static Renderer3D_Data s_3Ddata;
 
 	void Renderer3D::Init()
 	{
-		s_3D_Data.vertexArray = VertexArray::Create();
-
-		s_3D_Data.vertexBuffer = VertexBuffer::Create(s_3D_Data.MaxVertices * sizeof(QuadVertex));
-
-		BufferLayout layout = {
-			{ ShaderDataType::Float3, "aPos"},
-			{ ShaderDataType::Float4, "aColor"},
-		};
-
-		s_3D_Data.vertexBuffer->SetLayout(layout);
-		s_3D_Data.vertexArray->AddVertexBuffer(s_3D_Data.vertexBuffer);
-
-		s_3D_Data.QuadVertexBufferBase = new QuadVertex[s_3D_Data.MaxVertices];
-
-		uint32_t* QuadIndices = new uint32_t[s_3D_Data.MaxIndices];
-
-		uint32_t Offset = 0;
-		for (uint32_t i = 0; i < s_3D_Data.MaxIndices; i += 6)
-		{
-			QuadIndices[i + 0] = Offset + 0;
-			QuadIndices[i + 1] = Offset + 1;
-			QuadIndices[i + 2] = Offset + 2;
-
-			QuadIndices[i + 3] = Offset + 2;
-			QuadIndices[i + 4] = Offset + 3;
-			QuadIndices[i + 5] = Offset + 0;
-
-			Offset += 4;
-		}
-
-		std::shared_ptr<IndexBuffer> indexBuffer = IndexBuffer::Create(QuadIndices, s_3D_Data.MaxIndices);
-		s_3D_Data.vertexArray->SetIndexBuffer(indexBuffer);
-		delete[] QuadIndices;
-
-		s_3D_Data.WhiteTexture = Texture2D::Create(1, 1);
-		uint32_t whiteTextureData = 0xffffffff;
-		s_3D_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
-
-		s_3D_Data.TextureSlots[0] = s_3D_Data.WhiteTexture;
-
-		int32_t samplers[s_3D_Data.MaxTextureSlots];
-		for (uint32_t i = 0; i < s_3D_Data.MaxTextureSlots; i++)
-			samplers[i] = i;
-
-		s_3D_Data.quadShader = Shader::Create("assets/shaders/Default3DQuad.glsl");
-		s_3D_Data.quadShader->Bind();
-		s_3D_Data.quadShader->SetIntArray("u_Textures", samplers, s_3D_Data.MaxTextureSlots);
-
-		// Front
-		s_3D_Data.QuadVertexPosition[0]  = glm::vec4(-0.5f, -0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[1]  = glm::vec4( 0.5f, -0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[2]  = glm::vec4( 0.5f,  0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[3]  = glm::vec4(-0.5f,  0.5f,  0.5f, 1.0f);
-		// Back
-		s_3D_Data.QuadVertexPosition[4]  = glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[5]  = glm::vec4( 0.5f, -0.5f, -0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[6]  = glm::vec4( 0.5f,  0.5f, -0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[7]  = glm::vec4(-0.5f,  0.5f, -0.5f, 1.0f);
-		// Left
-		s_3D_Data.QuadVertexPosition[8]  = glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[9]  = glm::vec4(-0.5f, -0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[10] = glm::vec4(-0.5f,  0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[11] = glm::vec4(-0.5f,  0.5f, -0.5f, 1.0f);
-		// Right
-		s_3D_Data.QuadVertexPosition[12] = glm::vec4( 0.5f, -0.5f, -0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[13] = glm::vec4( 0.5f, -0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[14] = glm::vec4( 0.5f,  0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[15] = glm::vec4( 0.5f,  0.5f, -0.5f, 1.0f);
-		// Top
-		s_3D_Data.QuadVertexPosition[16] = glm::vec4(-0.5f,  0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[17] = glm::vec4( 0.5f,  0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[18] = glm::vec4( 0.5f,  0.5f, -0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[19] = glm::vec4(-0.5f,  0.5f, -0.5f, 1.0f);
-		// Bottom
-		s_3D_Data.QuadVertexPosition[20] = glm::vec4(-0.5f,  0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[21] = glm::vec4( 0.5f,  0.5f,  0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[22] = glm::vec4( 0.5f,  0.5f, -0.5f, 1.0f);
-		s_3D_Data.QuadVertexPosition[23] = glm::vec4(-0.5f,  0.5f, -0.5f, 1.0f);
+		// Skybox
+		SkyboxInit();
 	}
-	
 
 	void Renderer3D::BeginScene(const Camera& camera, glm::mat4& transform)
 	{
 		glm::mat4 viewProjection = camera.GetProjection() * glm::inverse(transform);
 
-		s_3D_Data.quadShader->Bind();
-		s_3D_Data.quadShader->SetMatrix("u_ViewProjection", viewProjection);
+		StartBatch();
+	}
+
+	void Renderer3D::BeginScene(const EditorCamera& camera)
+	{
+		s_3Ddata.skyShader->SetMatrix("u_ViewProjection", camera.GetViewProjection());
+		s_3Ddata.skyShader->Bind();
 
 		StartBatch();
 	}
@@ -142,31 +51,167 @@ namespace Origin
 
 	void Renderer3D::Flush()
 	{
-		if (s_3D_Data.QuadIndexCount == 0)
-			return;
-		// Quads
-		{
-			uint32_t dataSize = (uint32_t)((uint8_t*)s_3D_Data.QuadVetexBufferPtr - (uint8_t*)s_3D_Data.QuadVertexBufferBase);
-			s_3D_Data.vertexBuffer->SetData(s_3D_Data.QuadVertexBufferBase, dataSize);
 
-			for (uint32_t i = 0; i < s_3D_Data.TextureSlotIndex; i++)
-				s_3D_Data.TextureSlots[i]->Bind(i);
-
-			RenderCommand::DrawTriIndexed(s_3D_Data.vertexArray, s_3D_Data.QuadIndexCount);
-			s_3D_Data.Stats.Draw_Calls++; s_3D_Data.quadShader->Unbind();
-		}
 	}
 
 	void Renderer3D::Shutdown()
 	{
-		delete[] s_3D_Data.QuadVertexBufferBase;
+	}
+
+	void Renderer3D::SkyboxInit()
+	{
+		//Skybox
+		///  Should start with the right side [ GL_CUBE_MAP_POSITIVE_X ]
+
+		float vertices[] = {
+
+			 1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f, // 0 [RIGHT] top left	
+			 1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f, // 1 [RIGHT] top right
+			 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f, // 2 [RIGHT] bottom right
+			 1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f, // 3 [RIGHT] bottom left
+
+			-1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, // 4 [LEFT] top left	
+			-1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f, // 5 [LEFT] top right
+			-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, // 6 [LEFT] bottom right
+			-1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, // 7 [LEFT] bottom left
+
+			-1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, // 8 [TOP] front left
+			 1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f, // 9 [TOP] front right
+			 1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f, //10 [TOP] back right
+			-1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f, //11 [TOP] back left
+
+			-1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, //12 [BOTTOM] front left
+			 1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f, //13 [BOTTOM] front right
+			 1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f, //14 [BOTTOM] back right
+			-1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, //15 [BOTTOM] back left
+
+			-1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, //16 [BACK] bottom left
+			 1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, //17 [BACK] bottom right
+			 1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, //18 [BACK] top right
+			-1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f, //19 [BACK] top left
+
+			-1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, //20 [FRONT] bottom left
+			 1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, //21 [FRONT] bottom right
+			 1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, //22 [FRONT] top right
+			-1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, //23 [FRONT] top left
+		};
+
+		s_3Ddata.skyVA = VertexArray::Create();
+		s_3Ddata.skyVB = VertexBuffer::Create(vertices, sizeof(vertices));
+
+		BufferLayout layout = {
+			{ ShaderDataType::Float3, "aPos"},
+			{ ShaderDataType::Float3, "aTexCoords"},
+		};
+
+		s_3Ddata.skyVB->SetLayout(layout);
+		s_3Ddata.skyVA->AddVertexBuffer(s_3Ddata.skyVB);
+
+		uint32_t* indices = new uint32_t[36];
+
+		uint32_t Offset = 0;
+		for (uint32_t i = 0; i < 36; i += 6)
+		{
+			indices[i + 0] = Offset + 0;
+			indices[i + 1] = Offset + 1;
+			indices[i + 2] = Offset + 2;
+
+			indices[i + 3] = Offset + 2;
+			indices[i + 4] = Offset + 3;
+			indices[i + 5] = Offset + 0;
+
+			Offset += 4;
+		}
+
+		std::shared_ptr<IndexBuffer> indexBuffer = IndexBuffer::Create(indices, 36);
+		s_3Ddata.skyVA->SetIndexBuffer(indexBuffer);
+		delete[] indices;
+
+		
+
+		std::string path[6] =
+		{
+			"assets/skybox/default/right.jpg",
+			"assets/skybox/default/left.jpg",
+			"assets/skybox/default/top.jpg",
+			"assets/skybox/default/bottom.jpg",
+			"assets/skybox/default/back.jpg",
+			"assets/skybox/default/front.jpg",
+		};
+
+		int width, height, bpp;
+		stbi_uc* data = nullptr;
+
+		stbi_set_flip_vertically_on_load(false);
+		GLenum dataFormat = 0, internalFormat = 0;
+
+		// set the file path
+		for (uint32_t i = 0; i < 6; i++)
+		{
+			data = stbi_load(path[i].c_str(), &height, &width, &bpp, 0);
+
+			switch (bpp)
+			{
+			case 3:
+				internalFormat = GL_RGB8;
+				dataFormat = GL_RGB;
+
+				break;
+
+			case 4:
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGBA;
+				break;
+			}
+
+			if (data)
+			{
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+				stbi_image_free(data);
+				OGN_CORE_TRACE("Texture \"{0}\" Successfully Loaded", path[i]);
+			}
+			else
+			{
+				OGN_CORE_ERROR("Failed to load Texture: {0}", path[i]);
+				stbi_image_free(data);
+			}
+		}
+		OGN_CORE_TRACE("Bits Per Pixel : {0}", bpp);
+		OGN_CORE_TRACE("Internal Format: {0}, Data Format: {1}", internalFormat, dataFormat);
+
+		// generate texture
+		glGenTextures(1, &s_3Ddata.skyTextureID);
+		glBindTexture(GL_TEXTURE_2D, s_3Ddata.skyTextureID);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		s_3Ddata.skyShader = Shader::Create("assets/shaders/Skybox.glsl");
+		s_3Ddata.skyShader->Bind();
+	}
+
+	void Renderer3D::DrawSkybox()
+	{
+		glDepthFunc(GL_LESS);
+		s_3Ddata.skyShader->Bind();
+		s_3Ddata.skyVA->Bind();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, s_3Ddata.skyTextureID);
+
+		glDrawElements(GL_TRIANGLES, s_3Ddata.skyVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, 0);
+
+		s_3Ddata.skyVA->Unbind();
+		s_3Ddata.skyShader->Unbind();
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		glDepthFunc(GL_LESS);
 	}
 
 	void Renderer3D::StartBatch()
 	{
-		s_3D_Data.QuadIndexCount = 0;
-		s_3D_Data.QuadVetexBufferPtr = s_3D_Data.QuadVertexBufferBase;
-		s_3D_Data.TextureSlotIndex = 1;
 	}
 
 	void Renderer3D::NextBatch()
@@ -175,32 +220,5 @@ namespace Origin
 		StartBatch();
 	}
 
-	void Renderer3D::DrawQuad(const glm::mat4& transform, const glm::vec4 color)
-	{
-		constexpr int QuadVertexCount = 24;
-
-		const float texIndex = 0.0f;
-		const float texTiling = 1.0f;
-
-		if (s_3D_Data.QuadIndexCount >= s_3D_Data.MaxIndices)
-			Renderer3D::StartBatch();
-
-		for (size_t i = 0; i < QuadVertexCount; i++)
-		{
-			s_3D_Data.QuadVetexBufferPtr->Position = transform * s_3D_Data.QuadVertexPosition[i];
-			s_3D_Data.QuadVetexBufferPtr->Color = color;
-			s_3D_Data.QuadVetexBufferPtr++;
-		}
-		s_3D_Data.QuadIndexCount += 6;
-		s_3D_Data.Stats.Quad_Count++;
-		
-	}
-
-	void Renderer3D::DrawPlane(const glm::mat4& transform, glm::vec2& tillingFactor)
-	{
-	}
-
-	void Renderer3D::DrawSkybox()
-	{
-	}
+	
 }

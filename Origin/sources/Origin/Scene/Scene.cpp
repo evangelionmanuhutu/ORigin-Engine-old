@@ -115,24 +115,14 @@ namespace Origin {
 				Renderer2D::EndScene();
 			}
 
-			/* {
+			{
 				// 3D Scene
 				Renderer3D::BeginScene(*mainCamera, cameraTransform);
-				glm::vec3 translation = glm::vec3(0.0f);
-				float rotation = 0.0f;
-				glm::vec3 scale = glm::vec3(1.0f);
 
-				glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f))
-					* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(1.0f))
-					* glm::scale(glm::mat4(1.0f), scale);
-
-				Renderer3D::DrawQuad(transform, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+				Renderer3D::DrawSkybox();
 
 				Renderer3D::EndScene();
-			}*/
-
-			// Skyboxes
-			Skybox::Draw(*mainCamera, cameraTransform);
+			}
 
 		}
 	}
@@ -151,7 +141,13 @@ namespace Origin {
 
 		Renderer2D::EndScene();
 
-		Skybox::Draw(camera);
+		// 3D Scene
+		Renderer3D::BeginScene(camera);
+
+		Renderer3D::DrawSkybox();
+
+		Renderer3D::EndScene();
+
 	}
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)

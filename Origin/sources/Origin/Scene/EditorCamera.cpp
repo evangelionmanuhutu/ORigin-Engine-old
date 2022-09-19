@@ -124,7 +124,7 @@ namespace Origin
 			}
 		}
 
-		OGN_CORE_TRACE("{}", m_Distance);
+		//OGN_CORE_TRACE("{}", m_Distance);
 
 		UpdateView();
 	}
